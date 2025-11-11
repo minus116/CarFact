@@ -2,13 +2,11 @@
 <html lang="ru" dir="ltr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#ffffff" />
-  <meta name="description" content="CarFact — сервис, который подскажет, когда и что менять в автомобиле по VIN или модели." />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="theme-color" content="#ffffff">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/style.css">
   <title>CarFact</title>
-  <link rel="stylesheet" href="assets/style.css" />
-  <link rel="icon" type="image/png" href="icons/sun.svg" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
 </head>
 <body>
   <header>
@@ -18,21 +16,22 @@
     </div>
     <div class="controls">
       <button id="langToggle" class="control-btn">RU</button>
-      <button id="themeToggle" class="control-btn">☀️</button>
+      <button id="themeToggle" class="control-btn">
+        <img id="themeIcon" src="icons/sun.svg" alt="Theme" width="16" height="16">
+      </button>
     </div>
   </header>
 
   <div class="input-group">
     <label for="vin" id="labelVin">VIN / Номер кузова / Модель</label>
-    <input type="text" id="vin" placeholder="JTDKN3DU3M3123456 или Prius 2021" />
+    <input type="text" id="vin" placeholder="JTDKN3DU3M3123456 или Prius 2021">
     <label for="mileage" id="labelMileage">Пробег (км)</label>
-    <input type="number" id="mileage" placeholder="45000" min="0" max="500000" />
+    <input type="number" id="mileage" placeholder="45000" min="0" max="500000">
     <button id="submitBtn" class="primary">Показать ТО</button>
-    <div id="errorMsg" class="error-msg" hidden></div>
   </div>
 
-  <div id="result" class="fade-in"></div>
+  <div id="result"></div>
 
-  <script src="assets/script.js"></script>
+  <script src="assets/script.js" defer></script>
 </body>
 </html>
