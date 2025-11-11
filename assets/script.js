@@ -1,10 +1,8 @@
-// === ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ ===
 let currentLang = 'ru';
 let currentTheme = 'light';
 let lastQuery = { carKey: null, mileage: 0 };
 let carsData = {};
 
-// === ЛОКАЛИЗАЦИЯ ===
 const translations = {
   ru: {
     title: "CarFact",
@@ -78,7 +76,6 @@ const translations = {
   }
 };
 
-// === ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ===
 function t(key) {
   return translations[currentLang][key] || key;
 }
@@ -102,11 +99,35 @@ function setLanguage(lang) {
 }
 
 function setTheme(theme) {
-  currentTheme = theme;
-  document.documentElement.setAttribute('data-theme', theme);
-  document.getElementById('themeIcon').src = theme === 'dark' ? 'icons/moon.svg' : 'icons/sun.svg';
-  const meta = document.querySelector('meta[name="theme-color"]');
-  if (meta) meta.setAttribute('content', theme === 'dark' ? '#000000' : '#ffffff');
+  if (document.body.classList.contains('theme-switching')) return;
+  if (currentTheme === theme) return;
+
+  document.body.classList.add('theme-switching');
+
+  setTimeout(() => {
+    currentTheme = theme;
+    document.documentElement.setAttribute('data-theme', theme);
+    
+    const icon = document.getElementById('themeIcon');
+    const newSrc = theme === 'dark' ? 'icons/moon.svg' : 'icons/sun.svg';
+    
+    const newImg = new Image();
+    newImg.src = newSrc;
+    newImg.onload = () => {
+      icon.classList.add('hidden');
+      setTimeout(() => {
+        icon.src = newSrc;
+        icon.classList.remove('hidden');
+      }, 150);
+    };
+
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute('content', theme === 'dark' ? '#000000' : '#ffffff');
+
+    setTimeout(() => {
+      document.body.classList.remove('theme-switching');
+    }, 300);
+  }, 50);
 }
 
 function updateUITexts() {
@@ -145,10 +166,8 @@ function renderReport(carKey, mileage) {
     </div>
   `;
 
-  // Масло
   html += `<div class="card"><h3>${t('oil')}</h3><p>${car.oil.type} — ${t('every')} ${human(car.oil.every)}</p><p class="small">${car.oil.brands.join(', ')}</p></div>`;
 
-  // Фильтры
   html += `<div class="card"><h3>${t('filters')}</h3><ul>`;
   html += `<li>${t('oilFilter')} — ${t('at')} ${human(car.filters.oil.interval)}<br><span class="small">${car.filters.oil.parts.join(', ')}</span></li>`;
   html += `<li>${t('airFilter')} — ${t('at')} ${human(car.filters.air.interval)}<br><span class="small">${car.filters.air.parts.join(', ')}</span></li>`;
@@ -158,7 +177,6 @@ function renderReport(carKey, mileage) {
   }
   html += `</ul></div>`;
 
-  // Тормоза
   html += `
     <div class="card">
       <h3>${t('brakes')}</h3>
@@ -171,12 +189,10 @@ function renderReport(carKey, mileage) {
     </div>
   `;
 
-  // Свечи
   if (car.sparkPlugs) {
     html += `<div class="card"><h3>${t('sparkPlugs')}</h3><p>${t('replaceAt')} ${human(car.sparkPlugs.interval)}</p><p class="small">${car.sparkPlugs.parts.join(', ')}</p></div>`;
   }
 
-  // ГРМ
   if (car.timing) {
     const type = car.timing.type === "chain" ? t('chain') : t('belt');
     html += `<div class="card"><h3>${t('timing')} (${type})</h3><p>${t('inspectAt')} ${human(car.timing.check)}`;
@@ -186,7 +202,6 @@ function renderReport(carKey, mileage) {
     html += `</p></div>`;
   }
 
-  // Колёса
   if (car.tires) {
     html += `
       <div class="card">
@@ -199,7 +214,6 @@ function renderReport(carKey, mileage) {
     `;
   }
 
-  // Рекомендации
   if (car.notes && car.notes[currentLang] && car.notes[currentLang].length) {
     html += `<div class="card"><h3>${t('recommendations')}</h3><ul>`;
     car.notes[currentLang].forEach(n => html += `<li>${n}</li>`);
@@ -211,20 +225,28 @@ function renderReport(carKey, mileage) {
   lastQuery = { carKey, mileage };
 }
 
-// === ИНИЦИАЛИЗАЦИЯ ===
 async function init() {
   try {
     const response = await fetch('assets/cars.json');
     carsData = await response.json();
   } catch (e) {
     console.error('Не удалось загрузить cars.json:', e);
-    // fallback на встроенные данные (можно раскомментировать при необходимости)
+    carsData = {
+      "prius 2021": {
+        "name": { "ru": "Toyota Prius (2021)", "en": "Toyota Prius (2021)" },
+        "intervals": 10000,
+        "oil": { "every": 10000, "type": "0W-20", "brands": ["Toyota"] },
+        "filters": { "oil": { "interval": 10000, "parts": ["Toyota"] } },
+        "brakePads": { "front": { "interval": 40000, "parts": ["Toyota"] } },
+        "tires": { "size": "195/65 R15", "pressure": { "front": "2.3", "rear": "2.2" } },
+        "notes": { "ru": ["Тестовый авто"], "en": ["Test vehicle"] }
+      }
+    };
   }
 
   setTheme(currentTheme);
   setLanguage(currentLang);
 
-  // Обработчики
   document.getElementById('langToggle').addEventListener('click', () => {
     setLanguage(currentLang === 'ru' ? 'en' : 'ru');
   });
@@ -245,8 +267,8 @@ async function init() {
       renderReport(carKey, mileage);
     } else {
       const msg = currentLang === 'ru' 
-        ? '<h2>Авто не найдено</h2><p>Поддерживаемые: Prius 2021, Fit 2020, Escudo 2015, XV 2019, C200 2019</p>' 
-        : '<h2>Not found</h2><p>Supported: Prius 2021, Fit 2020, Escudo 2015, XV 2019, C200 2019</p>';
+        ? '<h2>Авто не найдено</h2><p>Поддерживаемые: Prius 2021, Fit 2020...</p>' 
+        : '<h2>Not found</h2><p>Try: Prius 2021, Fit 2020</p>';
       document.getElementById('result').innerHTML = `<div class="card">${msg}</div>`;
       document.getElementById('result').style.display = 'block';
       lastQuery = { carKey: null, mileage: 0 };
@@ -258,7 +280,6 @@ async function init() {
   });
 }
 
-// Запуск при загрузке
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', init);
 } else {
