@@ -136,7 +136,7 @@
   <div id="result"></div>
 
   <script>
-    // === ПОЛНАЯ ЛОКАЛИЗАЦИЯ (все строки) ===
+    // === ЛОКАЛИЗАЦИЯ (ВСЁ) ===
     const translations = {
       ru: {
         title: "Авто ТО",
@@ -208,14 +208,33 @@
       }
     };
 
+    // Глобальное состояние
     let currentLang = 'ru';
     let currentTheme = 'light';
+    let lastQuery = { carKey: null, mileage: 0 };
 
+    // === ФУНКЦИИ ЛОКАЛИЗАЦИИ ===
+    function t(key) {
+      return translations[currentLang][key] || key;
+    }
+
+    function human(km) {
+      const k = Math.floor(km / 1000);
+      if (km >= 1000) {
+        return currentLang === 'ru' ? `${k} тыс. ${t('km')}` : `${k}k ${t('km')}`;
+      }
+      return `${km} ${t('km')}`;
+    }
+
+    // === ПЕРЕКЛЮЧЕНИЕ ЯЗЫКА (ПОЛНАЯ ПЕРЕРИСОВКА) ===
     function setLanguage(lang) {
       currentLang = lang;
       document.documentElement.lang = lang;
       document.getElementById('langToggle').textContent = lang === 'ru' ? 'RU' : 'EN';
-      updateTexts();
+      updateUITexts(); // обновляем ВЕСЬ интерфейс
+      if (lastQuery.carKey) {
+        renderReport(lastQuery.carKey, lastQuery.mileage); // перерисовываем отчёт
+      }
     }
 
     function setTheme(theme) {
@@ -226,39 +245,17 @@
       if (meta) meta.setAttribute('content', theme === 'dark' ? '#000000' : '#ffffff');
     }
 
-    function updateTexts() {
-      const t = translations[currentLang];
-      document.getElementById('pageTitle').textContent = t.title;
-      document.getElementById('pageSubtitle').textContent = t.subtitle;
-      document.getElementById('labelVin').textContent = t.labelVin;
-      document.getElementById('labelMileage').textContent = t.labelMileage;
-      document.getElementById('submitBtn').textContent = t.btnSubmit;
-      document.title = t.title;
+    function updateUITexts() {
+      document.getElementById('pageTitle').textContent = t('title');
+      document.getElementById('pageSubtitle').textContent = t('subtitle');
+      document.getElementById('labelVin').textContent = t('labelVin');
+      document.getElementById('labelMileage').textContent = t('labelMileage');
+      document.getElementById('submitBtn').textContent = t('btnSubmit');
+      document.title = t('title');
     }
 
-    // Форматирование пробега
-    function human(km) {
-      const t = translations[currentLang];
-      if (km >= 1000) {
-        const k = Math.floor(km / 1000);
-        return currentLang === 'ru' ? `${k} тыс. ${t.km}` : `${k}k ${t.km}`;
-      }
-      return `${km} ${t.km}`;
-    }
-
-    // Поиск авто
-    function findCar(query) {
-      const q = query.toLowerCase();
-      if (q.includes('prius') && (q.includes('2021') || q.includes('21'))) return 'prius 2021';
-      if (q.includes('fit') && q.includes('2020')) return 'fit 2020';
-      if ((q.includes('escudo') || q.includes('vitara')) && q.includes('2015')) return 'escudo 2015';
-      if (q.includes('xv') && q.includes('2019')) return 'xv 2019';
-      if (q.includes('c200') && q.includes('2019')) return 'c200 2019';
-      return null;
-    }
-
-    // Данные
-    const data = {
+    // === ДАННЫЕ ===
+    const cars = {
       "prius 2021": {
         name: { ru: "Toyota Prius (2021)", en: "Toyota Prius (2021)" },
         intervals: 10000,
@@ -280,35 +277,29 @@
           ru: ["HV-батарея: проверка каждые 40 000 км"],
           en: ["HV battery: inspect every 40,000 km"]
         }
-      },
-      // Остальные авто — по аналогии (сокращено для примера)
-      "fit 2020": {
-        name: { ru: "Honda Fit (2020)", en: "Honda Fit (2020)" },
-        intervals: 10000,
-        oil: { every: 10000, type: "0W-20", brands: ["Honda 0W-20"] },
-        filters: { oil: { interval: 10000, parts: ["Honda 15400-PLM-A02"] } },
-        sparkPlugs: { interval: 100000, parts: ["NGK SILZKR7B11"] },
-        brakePads: { front: { interval: 35000, parts: ["Honda 45022-TG5-A01"] } },
-        timing: { type: "belt", check: 60000, replace: 120000 },
-        tires: { size: "185/60 R15", pressure: { front: "2.3", rear: "2.2" } },
-        notes: { ru: ["CVT-жидкость: замена через 100 000 км"], en: ["CVT fluid: replace at 100,000 km"] }
       }
     };
 
-    function generateReport(carKey, mileage) {
-      const car = data[carKey];
-      const t = translations[currentLang];
+    function findCar(query) {
+      const q = query.toLowerCase();
+      if (q.includes('prius') && (q.includes('2021') || q.includes('21'))) return 'prius 2021';
+      return null;
+    }
+
+    // === ОСНОВНАЯ ФУНКЦИЯ ОТОБРАЖЕНИЯ ===
+    function renderReport(carKey, mileage) {
+      const car = cars[carKey];
       const nextTO = Math.ceil(mileage / car.intervals) * car.intervals;
       const diff = nextTO - mileage;
       const isOverdue = diff < 0;
 
       let html = `
         <div class="card" style="border-left: 4px solid var(--accent);">
-          <h2>${t.nextTO}</h2>
+          <h2>${t('nextTO')}</h2>
           <p style="font-size:1.4rem;font-weight:600;">
             ${human(nextTO)}
             <br><small>
-              ${isOverdue ? t.overdue : t.dueIn} ${Math.abs(diff)} ${t.km}
+              ${isOverdue ? t('overdue') : t('dueIn')} ${Math.abs(diff)} ${t('km')}
             </small>
           </p>
         </div>
@@ -317,32 +308,32 @@
       // Масло
       html += `
         <div class="card">
-          <h3>${t.oil}</h3>
-          <p>${car.oil.type} — ${t.every} ${human(car.oil.every)}</p>
+          <h3>${t('oil')}</h3>
+          <p>${car.oil.type} — ${t('every')} ${human(car.oil.every)}</p>
           <p class="small">${car.oil.brands.join(', ')}</p>
         </div>
       `;
 
-      // Фильтры — ПОЛНОСТЬЮ ЛОКАЛИЗОВАНЫ
-      html += `<div class="card"><h3>${t.filters}</h3><ul>`;
-      html += `<li>${t.oilFilter} — ${t.at} ${human(car.filters.oil.interval)}<br><span class="small">${car.filters.oil.parts.join(', ')}</span></li>`;
-      html += `<li>${t.airFilter} — ${t.at} ${human(car.filters.air.interval)}<br><span class="small">${car.filters.air.parts.join(', ')}</span></li>`;
-      html += `<li>${t.cabinFilter} — ${t.at} ${human(car.filters.cabin.interval)}<br><span class="small">${car.filters.cabin.parts.join(', ')}</span></li>`;
+      // Фильтры
+      html += `<div class="card"><h3>${t('filters')}</h3><ul>`;
+      html += `<li>${t('oilFilter')} — ${t('at')} ${human(car.filters.oil.interval)}<br><span class="small">${car.filters.oil.parts.join(', ')}</span></li>`;
+      html += `<li>${t('airFilter')} — ${t('at')} ${human(car.filters.air.interval)}<br><span class="small">${car.filters.air.parts.join(', ')}</span></li>`;
+      html += `<li>${t('cabinFilter')} — ${t('at')} ${human(car.filters.cabin.interval)}<br><span class="small">${car.filters.cabin.parts.join(', ')}</span></li>`;
       if (car.filters.fuel) {
-        html += `<li>${t.fuelFilter} — ${t.at} ${human(car.filters.fuel.interval)}<br><span class="small">${car.filters.fuel.parts.join(', ')}</span></li>`;
+        html += `<li>${t('fuelFilter')} — ${t('at')} ${human(car.filters.fuel.interval)}<br><span class="small">${car.filters.fuel.parts.join(', ')}</span></li>`;
       }
       html += `</ul></div>`;
 
       // Тормоза
       html += `
         <div class="card">
-          <h3>${t.brakes}</h3>
-          <h4>${t.brakeFront}</h4>
-          <p>${t.replaceAt} ${human(car.brakePads.front.interval)}</p>
+          <h3>${t('brakes')}</h3>
+          <h4>${t('brakeFront')}</h4>
+          <p>${t('replaceAt')} ${human(car.brakePads.front.interval)}</p>
           <p class="small">${car.brakePads.front.parts.join(', ')}</p>
           
-          <h4>${t.brakeRear}</h4>
-          <p>${t.replaceAt} ${human(car.brakePads.rear.interval)}</p>
+          <h4>${t('brakeRear')}</h4>
+          <p>${t('replaceAt')} ${human(car.brakePads.rear.interval)}</p>
           <p class="small">${car.brakePads.rear.parts.join(', ')}</p>
         </div>
       `;
@@ -351,8 +342,8 @@
       if (car.sparkPlugs) {
         html += `
           <div class="card">
-            <h3>${t.sparkPlugs}</h3>
-            <p>${t.replaceAt} ${human(car.sparkPlugs.interval)}</p>
+            <h3>${t('sparkPlugs')}</h3>
+            <p>${t('replaceAt')} ${human(car.sparkPlugs.interval)}</p>
             <p class="small">${car.sparkPlugs.parts.join(', ')}</p>
           </div>
         `;
@@ -360,13 +351,13 @@
 
       // ГРМ
       if (car.timing) {
-        const type = car.timing.type === "chain" ? t.chain : t.belt;
+        const type = car.timing.type === "chain" ? t('chain') : t('belt');
         html += `
           <div class="card">
-            <h3>${t.timing} (${type})</h3>
-            <p>${t.inspectAt} ${human(car.timing.check)}`;
+            <h3>${t('timing')} (${type})</h3>
+            <p>${t('inspectAt')} ${human(car.timing.check)}`;
         if (car.timing.replace) {
-          html += `<br>${t.replaceAt} ${human(car.timing.replace)}`;
+          html += `<br>${t('replaceAt')} ${human(car.timing.replace)}`;
         }
         html += `</p></div>`;
       }
@@ -375,26 +366,30 @@
       if (car.tires) {
         html += `
           <div class="card">
-            <h3>${t.wheels}</h3>
+            <h3>${t('wheels')}</h3>
             <ul>
-              <li>${t.tireSize}: <b>${car.tires.size}</b></li>
-              <li>${t.pressure}: ${t.front} — <b>${car.tires.pressure.front}</b>, ${t.rear} — <b>${car.tires.pressure.rear}</b></li>
+              <li>${t('tireSize')}: <b>${car.tires.size}</b></li>
+              <li>${t('pressure')}: ${t('front')} — <b>${car.tires.pressure.front}</b>, ${t('rear')} — <b>${car.tires.pressure.rear}</b></li>
             </ul>
           </div>
         `;
       }
 
       // Рекомендации
-      if (car.notes) {
+      if (car.notes && car.notes[currentLang]) {
         const notes = car.notes[currentLang];
-        if (notes && notes.length) {
-          html += `<div class="card"><h3>${t.recommendations}</h3><ul>`;
+        if (notes.length) {
+          html += `<div class="card"><h3>${t('recommendations')}</h3><ul>`;
           notes.forEach(n => html += `<li>${n}</li>`);
           html += `</ul></div>`;
         }
       }
 
-      return html;
+      document.getElementById('result').innerHTML = html;
+      document.getElementById('result').style.display = 'block';
+
+      // Сохраняем состояние для переключения языка
+      lastQuery = { carKey, mileage };
     }
 
     // === ИНИЦИАЛИЗАЦИЯ ===
@@ -415,26 +410,24 @@
       const mileage = parseInt(document.getElementById('mileage').value) || 0;
 
       if (!vin) {
-        alert(currentLang === 'ru' ? 'Введите VIN или модель' : 'Enter VIN or model');
+        alert(t('labelVin') + '?');
         return;
       }
       if (mileage < 0 || mileage > 500000) {
-        alert(currentLang === 'ru' ? 'Пробег от 0 до 500 000 км' : 'Mileage: 0–500,000 km');
+        alert(t('labelMileage') + ': 0–500,000');
         return;
       }
 
       const carKey = findCar(vin);
-      const resultDiv = document.getElementById('result');
-
-      if (carKey && data[carKey]) {
-        resultDiv.innerHTML = generateReport(carKey, mileage);
-        resultDiv.style.display = 'block';
+      if (carKey && cars[carKey]) {
+        renderReport(carKey, mileage);
       } else {
         const msg = currentLang === 'ru' 
-          ? '<h2>Авто не найдено</h2><p>Поддерживаемые: Prius 2021, Fit 2020, Escudo 2015, XV 2019, C200 2019</p>' 
-          : '<h2>Vehicle not found</h2><p>Supported: Prius 2021, Fit 2020, Escudo 2015, XV 2019, C200 2019</p>';
-        resultDiv.innerHTML = `<div class="card">${msg}</div>`;
-        resultDiv.style.display = 'block';
+          ? '<h2>Авто не найдено</h2><p>Prius 2021, Fit 2020...</p>' 
+          : '<h2>Vehicle not found</h2><p>Prius 2021, Fit 2020...</p>';
+        document.getElementById('result').innerHTML = `<div class="card">${msg}</div>`;
+        document.getElementById('result').style.display = 'block';
+        lastQuery = { carKey: null, mileage: 0 };
       }
     });
 
