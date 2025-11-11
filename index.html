@@ -117,7 +117,7 @@
   <header>
     <div class="logo">
       <h1 id="pageTitle">CarFact</h1>
-      <p class="subtitle" id="pageSubtitle">Enter VIN or mileage — see what to service and OEM parts to use</p>
+      <p class="subtitle" id="pageSubtitle">Enter VIN or mileage — see what to service and which parts to use</p>
     </div>
     <div class="controls">
       <button id="langToggle" class="control-btn">RU</button>
@@ -126,11 +126,11 @@
   </header>
 
   <div class="input-group">
-    <label for="vin" id="labelVin">VIN / Model (e.g. Prius 2021)</label>
-    <input type="text" id="vin" placeholder="JTDKN3DU3M3123456 or Prius 2021">
-    <label for="mileage" id="labelMileage">Mileage (km)</label>
+    <label for="vin" id="labelVin">VIN / Модель (напр.: Prius 2021)</label>
+    <input type="text" id="vin" placeholder="JTDKN3DU3M3123456 или Prius 2021">
+    <label for="mileage" id="labelMileage">Пробег (км)</label>
     <input type="number" id="mileage" placeholder="45000" min="0" max="500000">
-    <button id="submitBtn" class="primary">Show Maintenance</button>
+    <button id="submitBtn" class="primary">Показать ТО</button>
   </div>
 
   <div id="result"></div>
@@ -174,7 +174,7 @@
       },
       en: {
         title: "CarFact",
-        subtitle: "Enter VIN or mileage — see what to service and OEM parts to use",
+        subtitle: "Enter VIN or mileage — see what to service and which parts to use",
         labelVin: "VIN / Model (e.g. Prius 2021)",
         labelMileage: "Mileage (km)",
         btnSubmit: "Show Maintenance",
@@ -209,7 +209,7 @@
     };
 
     // Глобальное состояние
-    let currentLang = 'en'; // по умолчанию — английский (CarFact — международный бренд)
+    let currentLang = 'ru';
     let currentTheme = 'light';
     let lastQuery = { carKey: null, mileage: 0 };
 
@@ -253,7 +253,7 @@
       document.title = t('title');
     }
 
-    // Данные авто (сокращённо для примера — можно расширить)
+    // Данные авто
     const cars = {
       "prius 2021": {
         name: { ru: "Toyota Prius (2021)", en: "Toyota Prius (2021)" },
@@ -362,7 +362,7 @@
 
     // Инициализация
     setTheme(currentTheme);
-    setLanguage(currentLang); // по умолчанию — EN
+    setLanguage(currentLang);
 
     // Обработчики
     document.getElementById('langToggle').addEventListener('click', () => {
