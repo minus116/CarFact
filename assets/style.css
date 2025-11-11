@@ -7,6 +7,13 @@
   --card-bg: #f5f5f7;
   --accent: #0071e3;
   --border: #e5e5ea;
+  --transition-ease: cubic-bezier(0.33, 0, 0.66, 1);
+  --theme-transition: background-color 0.3s var(--transition-ease),
+                      color 0.3s var(--transition-ease);
+}
+
+*, *::before, *::after {
+  transition: var(--theme-transition);
 }
 
 [data-theme="dark"] {
@@ -16,12 +23,6 @@
   --bg: #000000;
   --card-bg: #1c1c1e;
   --border: #3a3a3c;
-}
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
 }
 
 body {
@@ -35,6 +36,30 @@ body {
   margin: 0 auto;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  opacity: 1;
+  transition: var(--theme-transition), opacity 0.3s var(--transition-ease);
+}
+
+.theme-switching {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.theme-icon-container {
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.theme-icon-container img {
+  transition: opacity 0.2s ease-in-out;
+}
+
+.theme-icon-container img.hidden {
+  opacity: 0;
+  position: absolute;
 }
 
 h1, h2, h3, h4 {
@@ -47,7 +72,6 @@ h2 { font-size: 1.25rem; margin-bottom: 0.4rem; }
 h3 { font-size: 1.1rem; margin: 1rem 0 0.5rem; }
 h4 { font-size: 1.05rem; margin: 0.8rem 0 0.4rem; font-weight: 500; }
 
-/* Специальные стили для блока "Следующее ТО" */
 .next-to-subtitle {
   font-size: 0.85rem;
   color: var(--light-text);
