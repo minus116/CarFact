@@ -1,0 +1,7 @@
+{
+  "prius 2021": {"intervals": 10000, "oil": {"every": 10000, "type": "0W-20"}},
+  "fit 2020": {"intervals": 10000, "oil": {"every": 10000, "type": "0W-20"}},
+  "escudo 2015": {"intervals": 10000, "oil": {"every": 10000, "type": "5W-30"}},
+  "xv 2019": {"intervals": 10000, "oil": {"every": 10000, "type": "0W-20"}},
+  "c200 2019": {"intervals": 15000, "oil": {"every": 15000, "type": "5W-40"}}
+}
