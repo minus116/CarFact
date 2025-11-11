@@ -107,10 +107,10 @@ function setTheme(theme) {
   setTimeout(() => {
     currentTheme = theme;
     document.documentElement.setAttribute('data-theme', theme);
-    
+
     const icon = document.getElementById('themeIcon');
     const newSrc = theme === 'dark' ? 'icons/moon.svg' : 'icons/sun.svg';
-    
+
     const newImg = new Image();
     newImg.src = newSrc;
     newImg.onload = () => {
