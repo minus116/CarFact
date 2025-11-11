@@ -52,9 +52,28 @@
     }
 
     h1 { font-size: 2rem; }
-    h2 { font-size: 1.25rem; margin-bottom: 1rem; }
+    h2 { font-size: 1.25rem; margin-bottom: 0.4rem; }
     h3 { font-size: 1.1rem; margin: 1rem 0 0.5rem; }
     h4 { font-size: 1.05rem; margin: 0.8rem 0 0.4rem; font-weight: 500; }
+
+    /* Специальные стили для блока "Следующее ТО" */
+    .next-to-subtitle {
+      font-size: 0.85rem;
+      color: var(--light-text);
+      font-weight: 400;
+      font-style: italic;
+      margin: -0.4rem 0 0.6rem;
+    }
+    .next-to-value {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin: 0 0 0.3rem;
+    }
+    .next-to-diff {
+      font-size: 1rem;
+      color: var(--light-text);
+      margin: 0;
+    }
 
     header {
       display: flex;
@@ -194,6 +213,7 @@
         labelMileage: "Пробег (км)",
         btnSubmit: "Показать ТО",
         nextTO: "Следующее ТО",
+        recommendedByManufacturer: "рекомендуемое заводом изготовителем",
         dueIn: "через",
         km: "км",
         overdue: "просрочено на",
@@ -228,6 +248,7 @@
         labelMileage: "Mileage (km)",
         btnSubmit: "Show Maintenance",
         nextTO: "Next Service",
+        recommendedByManufacturer: "as recommended by the manufacturer",
         dueIn: "due in",
         km: "km",
         overdue: "overdue by",
@@ -431,11 +452,10 @@
       let html = `
         <div class="card" style="border-left: 4px solid var(--accent);">
           <h2>${t('nextTO')}</h2>
-          <p style="font-size:1.4rem;font-weight:600;">
-            ${human(nextTO)}
-            <br><small>
-              ${isOverdue ? t('overdue') : t('dueIn')} ${Math.abs(diff)} ${t('km')}
-            </small>
+          <p class="next-to-subtitle">${t('recommendedByManufacturer')}</p>
+          <p class="next-to-value">${human(nextTO)}</p>
+          <p class="next-to-diff">
+            ${isOverdue ? t('overdue') : t('dueIn')} ${Math.abs(diff)} ${t('km')}
           </p>
         </div>
       `;
