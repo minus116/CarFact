@@ -1,4 +1,3 @@
-
 {
   "prius 2021": {
     "name": { "ru": "Toyota Prius (2021)", "en": "Toyota Prius (2021)" },
@@ -17,7 +16,10 @@
     },
     "timing": { "type": "chain", "check": 100000, "replace": 200000 },
     "tires": { "size": "195/65 R15", "pressure": { "front": "2.3", "rear": "2.2" } },
-    "notes": { "ru": ["HV-батарея: проверка каждые 40 000 км"], "en": ["HV battery: inspect every 40,000 km"] }
+    "notes": {
+      "ru": ["HV-батарея: проверка каждые 40 000 км"],
+      "en": ["HV battery: inspect every 40,000 km"]
+    }
   },
   "fit 2020": {
     "name": { "ru": "Honda Fit (2020)", "en": "Honda Fit (2020)" },
@@ -35,7 +37,10 @@
     },
     "timing": { "type": "belt", "check": 60000, "replace": 120000 },
     "tires": { "size": "185/60 R15", "pressure": { "front": "2.3", "rear": "2.2" } },
-    "notes": { "ru": ["CVT-жидкость: замена через 100 000 км"], "en": ["CVT fluid: replace at 100,000 km"] }
+    "notes": {
+      "ru": ["CVT-жидкость: замена через 100 000 км"],
+      "en": ["CVT fluid: replace at 100,000 km"]
+    }
   },
   "escudo 2015": {
     "name": { "ru": "Suzuki Escudo (2015)", "en": "Suzuki Vitara (2015)" },
@@ -53,7 +58,10 @@
     },
     "timing": { "type": "belt", "check": 60000, "replace": 100000 },
     "tires": { "size": "215/60 R17", "pressure": { "front": "2.3", "rear": "2.3" } },
-    "notes": { "ru": ["Полный привод: проверка раздатки каждые 30 000 км"], "en": ["4WD: inspect transfer case every 30,000 km"] }
+    "notes": {
+      "ru": ["Полный привод: проверка раздатки каждые 30 000 км"],
+      "en": ["4WD: inspect transfer case every 30,000 km"]
+    }
   },
   "xv 2019": {
     "name": { "ru": "Subaru XV (2019)", "en": "Subaru XV (2019)" },
@@ -71,7 +79,10 @@
     },
     "timing": { "type": "chain", "check": 100000 },
     "tires": { "size": "225/55 R18", "pressure": { "front": "2.4", "rear": "2.3" } },
-    "notes": { "ru": ["Проверка подвески каждые 20 000 км"], "en": ["Inspect suspension every 20,000 km"] }
+    "notes": {
+      "ru": ["Проверка подвески каждые 20 000 км"],
+      "en": ["Inspect suspension every 20,000 km"]
+    }
   },
   "c200 2019": {
     "name": { "ru": "Mercedes C200 (2019)", "en": "Mercedes-Benz C200 (2019)" },
@@ -89,6 +100,9 @@
     },
     "timing": { "type": "chain", "check": 120000 },
     "tires": { "size": "225/50 R17 (F), 245/45 R17 (R)", "pressure": { "front": "2.3", "rear": "2.4" } },
-    "notes": { "ru": ["Охлаждающая жидкость: замена 150 000 км"], "en": ["Coolant: replace at 150,000 km"] }
+    "notes": {
+      "ru": ["Охлаждающая жидкость: замена 150 000 км"],
+      "en": ["Coolant: replace at 150,000 km"]
+    }
   }
 }
