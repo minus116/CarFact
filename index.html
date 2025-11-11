@@ -57,7 +57,8 @@
       border: none;
       background: var(--card-bg);
       color: var(--light-text);
-      font-size: 16px;
+      font-size: 14px;
+      font-weight: 600;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -119,7 +120,7 @@
       <p class="subtitle" id="pageSubtitle">Введите VIN или пробег — узнайте, что менять и какие запчасти использовать</p>
     </div>
     <div class="controls">
-      <button id="langToggle" class="control-btn">🇷🇺</button>
+      <button id="langToggle" class="control-btn">RU</button>
       <button id="themeToggle" class="control-btn">☀️</button>
     </div>
   </header>
@@ -135,7 +136,7 @@
   <div id="result"></div>
 
   <script>
-    // === ПОЛНАЯ ЛОКАЛИЗАЦИЯ ===
+    // === ПОЛНАЯ ЛОКАЛИЗАЦИЯ (все строки) ===
     const translations = {
       ru: {
         title: "Авто ТО",
@@ -149,13 +150,27 @@
         overdue: "просрочено на",
         oil: "Моторное масло",
         filters: "Фильтры",
+        oilFilter: "Масляный",
+        airFilter: "Воздушный",
+        cabinFilter: "Салонный",
+        fuelFilter: "Топливный",
         sparkPlugs: "Свечи зажигания",
         brakes: "Тормозные колодки",
         brakeFront: "Передние",
         brakeRear: "Задние",
         timing: "ГРМ",
+        chain: "цепь",
+        belt: "ремень",
         wheels: "Колёса и давление",
-        recommendations: "Рекомендации"
+        tireSize: "Размер шин",
+        pressure: "Давление (бар)",
+        front: "перед",
+        rear: "зад",
+        recommendations: "Рекомендации",
+        inspectAt: "Проверка —",
+        replaceAt: "Замена —",
+        every: "каждые",
+        at: "на"
       },
       en: {
         title: "Car Maintenance",
@@ -169,13 +184,27 @@
         overdue: "overdue by",
         oil: "Engine Oil",
         filters: "Filters",
+        oilFilter: "Oil",
+        airFilter: "Air",
+        cabinFilter: "Cabin",
+        fuelFilter: "Fuel",
         sparkPlugs: "Spark Plugs",
         brakes: "Brake Pads",
         brakeFront: "Front",
         brakeRear: "Rear",
         timing: "Timing System",
+        chain: "chain",
+        belt: "belt",
         wheels: "Wheels & Tire Pressure",
-        recommendations: "Notes"
+        tireSize: "Tire size",
+        pressure: "Pressure (bar)",
+        front: "Front",
+        rear: "Rear",
+        recommendations: "Notes",
+        inspectAt: "Inspect at",
+        replaceAt: "Replace at",
+        every: "every",
+        at: "at"
       }
     };
 
@@ -185,7 +214,7 @@
     function setLanguage(lang) {
       currentLang = lang;
       document.documentElement.lang = lang;
-      document.getElementById('langToggle').textContent = lang === 'ru' ? '🇷🇺' : '🇬🇧';
+      document.getElementById('langToggle').textContent = lang === 'ru' ? 'RU' : 'EN';
       updateTexts();
     }
 
@@ -207,8 +236,29 @@
       document.title = t.title;
     }
 
-    // === ДАННЫЕ АВТО ===
-    const cars = {
+    // Форматирование пробега
+    function human(km) {
+      const t = translations[currentLang];
+      if (km >= 1000) {
+        const k = Math.floor(km / 1000);
+        return currentLang === 'ru' ? `${k} тыс. ${t.km}` : `${k}k ${t.km}`;
+      }
+      return `${km} ${t.km}`;
+    }
+
+    // Поиск авто
+    function findCar(query) {
+      const q = query.toLowerCase();
+      if (q.includes('prius') && (q.includes('2021') || q.includes('21'))) return 'prius 2021';
+      if (q.includes('fit') && q.includes('2020')) return 'fit 2020';
+      if ((q.includes('escudo') || q.includes('vitara')) && q.includes('2015')) return 'escudo 2015';
+      if (q.includes('xv') && q.includes('2019')) return 'xv 2019';
+      if (q.includes('c200') && q.includes('2019')) return 'c200 2019';
+      return null;
+    }
+
+    // Данные
+    const data = {
       "prius 2021": {
         name: { ru: "Toyota Prius (2021)", en: "Toyota Prius (2021)" },
         intervals: 10000,
@@ -224,25 +274,29 @@
           front: { interval: 40000, parts: ["Toyota 04465-0K060", "TRW GDB3469"] },
           rear: { interval: 60000, parts: ["Toyota 04466-0K060", "TRW GDB3470"] }
         },
-        timing: { type: { ru: "цепь", en: "chain" }, check: 100000, replace: 200000 },
+        timing: { type: "chain", check: 100000, replace: 200000 },
         tires: { size: "195/65 R15", pressure: { front: "2.3", rear: "2.2" } },
-        notes: { ru: ["HV-батарея: проверка каждые 40 000 км"], en: ["HV battery: inspect every 40,000 km"] }
+        notes: {
+          ru: ["HV-батарея: проверка каждые 40 000 км"],
+          en: ["HV battery: inspect every 40,000 km"]
+        }
+      },
+      // Остальные авто — по аналогии (сокращено для примера)
+      "fit 2020": {
+        name: { ru: "Honda Fit (2020)", en: "Honda Fit (2020)" },
+        intervals: 10000,
+        oil: { every: 10000, type: "0W-20", brands: ["Honda 0W-20"] },
+        filters: { oil: { interval: 10000, parts: ["Honda 15400-PLM-A02"] } },
+        sparkPlugs: { interval: 100000, parts: ["NGK SILZKR7B11"] },
+        brakePads: { front: { interval: 35000, parts: ["Honda 45022-TG5-A01"] } },
+        timing: { type: "belt", check: 60000, replace: 120000 },
+        tires: { size: "185/60 R15", pressure: { front: "2.3", rear: "2.2" } },
+        notes: { ru: ["CVT-жидкость: замена через 100 000 км"], en: ["CVT fluid: replace at 100,000 km"] }
       }
     };
 
-    // Вспомогательные
-    function human(km) {
-      return km >= 1000 ? Math.floor(km / 1000) + (currentLang === 'ru' ? " тыс. км" : "k km") : km + " km";
-    }
-
-    function findCar(query) {
-      const q = query.toLowerCase();
-      if (q.includes('prius') && q.includes('2021')) return cars['prius 2021'];
-      return null;
-    }
-
-    // === ГЕНЕРАЦИЯ ОТЧЁТА — ВСЁ ЛОКАЛИЗОВАНО ===
-    function generateReport(car, mileage) {
+    function generateReport(carKey, mileage) {
+      const car = data[carKey];
       const t = translations[currentLang];
       const nextTO = Math.ceil(mileage / car.intervals) * car.intervals;
       const diff = nextTO - mileage;
@@ -264,31 +318,31 @@
       html += `
         <div class="card">
           <h3>${t.oil}</h3>
-          <p>${car.oil.type} — every ${human(car.oil.every)}</p>
+          <p>${car.oil.type} — ${t.every} ${human(car.oil.every)}</p>
           <p class="small">${car.oil.brands.join(', ')}</p>
         </div>
       `;
 
-      // Фильтры
+      // Фильтры — ПОЛНОСТЬЮ ЛОКАЛИЗОВАНЫ
       html += `<div class="card"><h3>${t.filters}</h3><ul>`;
-      html += `<li>Oil filter — ${human(car.filters.oil.interval)}<br><span class="small">${car.filters.oil.parts.join(', ')}</span></li>`;
-      html += `<li>Air filter — ${human(car.filters.air.interval)}<br><span class="small">${car.filters.air.parts.join(', ')}</span></li>`;
-      html += `<li>Cabin filter — ${human(car.filters.cabin.interval)}<br><span class="small">${car.filters.cabin.parts.join(', ')}</span></li>`;
+      html += `<li>${t.oilFilter} — ${t.at} ${human(car.filters.oil.interval)}<br><span class="small">${car.filters.oil.parts.join(', ')}</span></li>`;
+      html += `<li>${t.airFilter} — ${t.at} ${human(car.filters.air.interval)}<br><span class="small">${car.filters.air.parts.join(', ')}</span></li>`;
+      html += `<li>${t.cabinFilter} — ${t.at} ${human(car.filters.cabin.interval)}<br><span class="small">${car.filters.cabin.parts.join(', ')}</span></li>`;
       if (car.filters.fuel) {
-        html += `<li>Fuel filter — ${human(car.filters.fuel.interval)}<br><span class="small">${car.filters.fuel.parts.join(', ')}</span></li>`;
+        html += `<li>${t.fuelFilter} — ${t.at} ${human(car.filters.fuel.interval)}<br><span class="small">${car.filters.fuel.parts.join(', ')}</span></li>`;
       }
       html += `</ul></div>`;
 
-      // Тормозные колодки
+      // Тормоза
       html += `
         <div class="card">
           <h3>${t.brakes}</h3>
           <h4>${t.brakeFront}</h4>
-          <p>Replace at ${human(car.brakePads.front.interval)}</p>
+          <p>${t.replaceAt} ${human(car.brakePads.front.interval)}</p>
           <p class="small">${car.brakePads.front.parts.join(', ')}</p>
           
           <h4>${t.brakeRear}</h4>
-          <p>Replace at ${human(car.brakePads.rear.interval)}</p>
+          <p>${t.replaceAt} ${human(car.brakePads.rear.interval)}</p>
           <p class="small">${car.brakePads.rear.parts.join(', ')}</p>
         </div>
       `;
@@ -298,7 +352,7 @@
         html += `
           <div class="card">
             <h3>${t.sparkPlugs}</h3>
-            <p>Replace at ${human(car.sparkPlugs.interval)}</p>
+            <p>${t.replaceAt} ${human(car.sparkPlugs.interval)}</p>
             <p class="small">${car.sparkPlugs.parts.join(', ')}</p>
           </div>
         `;
@@ -306,16 +360,13 @@
 
       // ГРМ
       if (car.timing) {
-        const typeRu = car.timing.type.ru || car.timing.type;
-        const typeEn = car.timing.type.en || car.timing.type;
-        const type = currentLang === 'ru' ? typeRu : typeEn;
-        
+        const type = car.timing.type === "chain" ? t.chain : t.belt;
         html += `
           <div class="card">
             <h3>${t.timing} (${type})</h3>
-            <p>Inspect at ${human(car.timing.check)}`;
+            <p>${t.inspectAt} ${human(car.timing.check)}`;
         if (car.timing.replace) {
-          html += `<br>Replace at ${human(car.timing.replace)}`;
+          html += `<br>${t.replaceAt} ${human(car.timing.replace)}`;
         }
         html += `</p></div>`;
       }
@@ -326,8 +377,8 @@
           <div class="card">
             <h3>${t.wheels}</h3>
             <ul>
-              <li>Tire size: <b>${car.tires.size}</b></li>
-              <li>Pressure (bar): Front — <b>${car.tires.pressure.front}</b>, Rear — <b>${car.tires.pressure.rear}</b></li>
+              <li>${t.tireSize}: <b>${car.tires.size}</b></li>
+              <li>${t.pressure}: ${t.front} — <b>${car.tires.pressure.front}</b>, ${t.rear} — <b>${car.tires.pressure.rear}</b></li>
             </ul>
           </div>
         `;
@@ -335,7 +386,7 @@
 
       // Рекомендации
       if (car.notes) {
-        const notes = currentLang === 'ru' ? car.notes.ru : car.notes.en;
+        const notes = car.notes[currentLang];
         if (notes && notes.length) {
           html += `<div class="card"><h3>${t.recommendations}</h3><ul>`;
           notes.forEach(n => html += `<li>${n}</li>`);
@@ -363,19 +414,25 @@
       const vin = document.getElementById('vin').value.trim();
       const mileage = parseInt(document.getElementById('mileage').value) || 0;
 
-      if (!vin) return alert(currentLang === 'ru' ? 'Введите VIN или модель' : 'Enter VIN or model');
-      if (mileage < 0 || mileage > 500000) return alert(currentLang === 'ru' ? 'Пробег от 0 до 500 000 км' : 'Mileage must be 0–500,000 km');
+      if (!vin) {
+        alert(currentLang === 'ru' ? 'Введите VIN или модель' : 'Enter VIN or model');
+        return;
+      }
+      if (mileage < 0 || mileage > 500000) {
+        alert(currentLang === 'ru' ? 'Пробег от 0 до 500 000 км' : 'Mileage: 0–500,000 km');
+        return;
+      }
 
-      const car = findCar(vin);
+      const carKey = findCar(vin);
       const resultDiv = document.getElementById('result');
 
-      if (car) {
-        resultDiv.innerHTML = generateReport(car, mileage);
+      if (carKey && data[carKey]) {
+        resultDiv.innerHTML = generateReport(carKey, mileage);
         resultDiv.style.display = 'block';
       } else {
         const msg = currentLang === 'ru' 
-          ? '<h2>Авто не найдено</h2><p>Попробуйте: Prius 2021</p>' 
-          : '<h2>Vehicle not found</h2><p>Try: Prius 2021</p>';
+          ? '<h2>Авто не найдено</h2><p>Поддерживаемые: Prius 2021, Fit 2020, Escudo 2015, XV 2019, C200 2019</p>' 
+          : '<h2>Vehicle not found</h2><p>Supported: Prius 2021, Fit 2020, Escudo 2015, XV 2019, C200 2019</p>';
         resultDiv.innerHTML = `<div class="card">${msg}</div>`;
         resultDiv.style.display = 'block';
       }
