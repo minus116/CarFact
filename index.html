@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <meta name="theme-color" content="#ffffff">
-  <title>Авто ТО</title>
+  <title>CarFact</title>
   <style>
     :root {
       --primary: #1d1d1f;
@@ -116,8 +116,8 @@
 <body>
   <header>
     <div class="logo">
-      <h1 id="pageTitle">Авто ТО</h1>
-      <p class="subtitle" id="pageSubtitle">Введите VIN или пробег — узнайте, что менять и какие запчасти использовать</p>
+      <h1 id="pageTitle">CarFact</h1>
+      <p class="subtitle" id="pageSubtitle">Enter VIN or mileage — see what to service and OEM parts to use</p>
     </div>
     <div class="controls">
       <button id="langToggle" class="control-btn">RU</button>
@@ -126,20 +126,20 @@
   </header>
 
   <div class="input-group">
-    <label for="vin" id="labelVin">VIN / Модель (напр.: Prius 2021)</label>
-    <input type="text" id="vin" placeholder="JTDKN3DU3M3123456 или Prius 2021">
-    <label for="mileage" id="labelMileage">Пробег (км)</label>
+    <label for="vin" id="labelVin">VIN / Model (e.g. Prius 2021)</label>
+    <input type="text" id="vin" placeholder="JTDKN3DU3M3123456 or Prius 2021">
+    <label for="mileage" id="labelMileage">Mileage (km)</label>
     <input type="number" id="mileage" placeholder="45000" min="0" max="500000">
-    <button id="submitBtn" class="primary">Показать ТО</button>
+    <button id="submitBtn" class="primary">Show Maintenance</button>
   </div>
 
   <div id="result"></div>
 
   <script>
-    // === ЛОКАЛИЗАЦИЯ (ВСЁ) ===
+    // === ЛОКАЛИЗАЦИЯ ===
     const translations = {
       ru: {
-        title: "Авто ТО",
+        title: "CarFact",
         subtitle: "Введите VIN или пробег — узнайте, что менять и какие запчасти использовать",
         labelVin: "VIN / Модель (напр.: Prius 2021)",
         labelMileage: "Пробег (км)",
@@ -173,7 +173,7 @@
         at: "на"
       },
       en: {
-        title: "Car Maintenance",
+        title: "CarFact",
         subtitle: "Enter VIN or mileage — see what to service and OEM parts to use",
         labelVin: "VIN / Model (e.g. Prius 2021)",
         labelMileage: "Mileage (km)",
@@ -209,11 +209,11 @@
     };
 
     // Глобальное состояние
-    let currentLang = 'ru';
+    let currentLang = 'en'; // по умолчанию — английский (CarFact — международный бренд)
     let currentTheme = 'light';
     let lastQuery = { carKey: null, mileage: 0 };
 
-    // === ФУНКЦИИ ЛОКАЛИЗАЦИИ ===
+    // Функции
     function t(key) {
       return translations[currentLang][key] || key;
     }
@@ -226,14 +226,13 @@
       return `${km} ${t('km')}`;
     }
 
-    // === ПЕРЕКЛЮЧЕНИЕ ЯЗЫКА (ПОЛНАЯ ПЕРЕРИСОВКА) ===
     function setLanguage(lang) {
       currentLang = lang;
       document.documentElement.lang = lang;
       document.getElementById('langToggle').textContent = lang === 'ru' ? 'RU' : 'EN';
-      updateUITexts(); // обновляем ВЕСЬ интерфейс
+      updateUITexts();
       if (lastQuery.carKey) {
-        renderReport(lastQuery.carKey, lastQuery.mileage); // перерисовываем отчёт
+        renderReport(lastQuery.carKey, lastQuery.mileage);
       }
     }
 
@@ -254,7 +253,7 @@
       document.title = t('title');
     }
 
-    // === ДАННЫЕ ===
+    // Данные авто (сокращённо для примера — можно расширить)
     const cars = {
       "prius 2021": {
         name: { ru: "Toyota Prius (2021)", en: "Toyota Prius (2021)" },
@@ -286,7 +285,6 @@
       return null;
     }
 
-    // === ОСНОВНАЯ ФУНКЦИЯ ОТОБРАЖЕНИЯ ===
     function renderReport(carKey, mileage) {
       const car = cars[carKey];
       const nextTO = Math.ceil(mileage / car.intervals) * car.intervals;
@@ -305,16 +303,8 @@
         </div>
       `;
 
-      // Масло
-      html += `
-        <div class="card">
-          <h3>${t('oil')}</h3>
-          <p>${car.oil.type} — ${t('every')} ${human(car.oil.every)}</p>
-          <p class="small">${car.oil.brands.join(', ')}</p>
-        </div>
-      `;
+      html += `<div class="card"><h3>${t('oil')}</h3><p>${car.oil.type} — ${t('every')} ${human(car.oil.every)}</p><p class="small">${car.oil.brands.join(', ')}</p></div>`;
 
-      // Фильтры
       html += `<div class="card"><h3>${t('filters')}</h3><ul>`;
       html += `<li>${t('oilFilter')} — ${t('at')} ${human(car.filters.oil.interval)}<br><span class="small">${car.filters.oil.parts.join(', ')}</span></li>`;
       html += `<li>${t('airFilter')} — ${t('at')} ${human(car.filters.air.interval)}<br><span class="small">${car.filters.air.parts.join(', ')}</span></li>`;
@@ -324,45 +314,29 @@
       }
       html += `</ul></div>`;
 
-      // Тормоза
       html += `
         <div class="card">
           <h3>${t('brakes')}</h3>
           <h4>${t('brakeFront')}</h4>
           <p>${t('replaceAt')} ${human(car.brakePads.front.interval)}</p>
           <p class="small">${car.brakePads.front.parts.join(', ')}</p>
-          
           <h4>${t('brakeRear')}</h4>
           <p>${t('replaceAt')} ${human(car.brakePads.rear.interval)}</p>
           <p class="small">${car.brakePads.rear.parts.join(', ')}</p>
         </div>
       `;
 
-      // Свечи
       if (car.sparkPlugs) {
-        html += `
-          <div class="card">
-            <h3>${t('sparkPlugs')}</h3>
-            <p>${t('replaceAt')} ${human(car.sparkPlugs.interval)}</p>
-            <p class="small">${car.sparkPlugs.parts.join(', ')}</p>
-          </div>
-        `;
+        html += `<div class="card"><h3>${t('sparkPlugs')}</h3><p>${t('replaceAt')} ${human(car.sparkPlugs.interval)}</p><p class="small">${car.sparkPlugs.parts.join(', ')}</p></div>`;
       }
 
-      // ГРМ
       if (car.timing) {
         const type = car.timing.type === "chain" ? t('chain') : t('belt');
-        html += `
-          <div class="card">
-            <h3>${t('timing')} (${type})</h3>
-            <p>${t('inspectAt')} ${human(car.timing.check)}`;
-        if (car.timing.replace) {
-          html += `<br>${t('replaceAt')} ${human(car.timing.replace)}`;
-        }
+        html += `<div class="card"><h3>${t('timing')} (${type})</h3><p>${t('inspectAt')} ${human(car.timing.check)}`;
+        if (car.timing.replace) html += `<br>${t('replaceAt')} ${human(car.timing.replace)}`;
         html += `</p></div>`;
       }
 
-      // Колёса
       if (car.tires) {
         html += `
           <div class="card">
@@ -375,28 +349,22 @@
         `;
       }
 
-      // Рекомендации
-      if (car.notes && car.notes[currentLang]) {
-        const notes = car.notes[currentLang];
-        if (notes.length) {
-          html += `<div class="card"><h3>${t('recommendations')}</h3><ul>`;
-          notes.forEach(n => html += `<li>${n}</li>`);
-          html += `</ul></div>`;
-        }
+      if (car.notes && car.notes[currentLang]?.length) {
+        html += `<div class="card"><h3>${t('recommendations')}</h3><ul>`;
+        car.notes[currentLang].forEach(n => html += `<li>${n}</li>`);
+        html += `</ul></div>`;
       }
 
       document.getElementById('result').innerHTML = html;
       document.getElementById('result').style.display = 'block';
-
-      // Сохраняем состояние для переключения языка
       lastQuery = { carKey, mileage };
     }
 
-    // === ИНИЦИАЛИЗАЦИЯ ===
+    // Инициализация
     setTheme(currentTheme);
-    setLanguage(currentLang);
+    setLanguage(currentLang); // по умолчанию — EN
 
-    // === ОБРАБОТЧИКИ ===
+    // Обработчики
     document.getElementById('langToggle').addEventListener('click', () => {
       setLanguage(currentLang === 'ru' ? 'en' : 'ru');
     });
@@ -409,14 +377,8 @@
       const vin = document.getElementById('vin').value.trim();
       const mileage = parseInt(document.getElementById('mileage').value) || 0;
 
-      if (!vin) {
-        alert(t('labelVin') + '?');
-        return;
-      }
-      if (mileage < 0 || mileage > 500000) {
-        alert(t('labelMileage') + ': 0–500,000');
-        return;
-      }
+      if (!vin) return alert(t('labelVin') + '?');
+      if (mileage < 0 || mileage > 500000) return alert(t('labelMileage') + ': 0–500,000');
 
       const carKey = findCar(vin);
       if (carKey && cars[carKey]) {
@@ -424,7 +386,7 @@
       } else {
         const msg = currentLang === 'ru' 
           ? '<h2>Авто не найдено</h2><p>Prius 2021, Fit 2020...</p>' 
-          : '<h2>Vehicle not found</h2><p>Prius 2021, Fit 2020...</p>';
+          : '<h2>Not found</h2><p>Try: Prius 2021, Fit 2020</p>';
         document.getElementById('result').innerHTML = `<div class="card">${msg}</div>`;
         document.getElementById('result').style.display = 'block';
         lastQuery = { carKey: null, mileage: 0 };
