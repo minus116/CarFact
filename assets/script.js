@@ -1,17 +1,10 @@
-
-"use strict";
-
-// === STATE ===
-let currentLang = localStorage.getItem("lang") || "ru";
-let currentTheme = localStorage.getItem("theme") || (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? "dark" : "light");
+// === ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ ===
+let currentLang = 'ru';
+let currentTheme = 'light';
 let lastQuery = { carKey: null, mileage: 0 };
-let cars = {};
+let carsData = {};
 
-// ELEMENTS
-const resultEl = document.getElementById("result");
-const errorMsg = document.getElementById("errorMsg");
-
-// TRANSLATIONS (включены все ключи из оригинала)
+// === ЛОКАЛИЗАЦИЯ ===
 const translations = {
   ru: {
     title: "CarFact",
@@ -46,9 +39,7 @@ const translations = {
     inspectAt: "Проверка —",
     replaceAt: "Замена —",
     every: "каждые",
-    at: "на",
-    notFoundTitle: "Авто не найдено",
-    supportedList: "Поддерживаемые: Prius 2021, Fit 2020, Escudo 2015, XV 2019, C200 2019"
+    at: "на"
   },
   en: {
     title: "CarFact",
@@ -83,83 +74,63 @@ const translations = {
     inspectAt: "Inspect at",
     replaceAt: "Replace at",
     every: "every",
-    at: "at",
-    notFoundTitle: "Not found",
-    supportedList: "Supported: Prius 2021, Fit 2020, Escudo 2015, XV 2019, C200 2019"
+    at: "at"
   }
 };
 
-function t(key){ return translations[currentLang] && translations[currentLang][key] ? translations[currentLang][key] : key; }
-
-// THEME
-function setTheme(theme){
-  currentTheme = theme;
-  document.documentElement.setAttribute("data-theme", theme);
-  const themeToggle = document.getElementById("themeToggle");
-  if (themeToggle) themeToggle.textContent = theme === "dark" ? "🌙" : "☀️";
-  const meta = document.querySelector('meta[name="theme-color"]');
-  if (meta) meta.setAttribute("content", theme === "dark" ? "#000000" : "#ffffff");
-  localStorage.setItem("theme", theme);
+// === ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ===
+function t(key) {
+  return translations[currentLang][key] || key;
 }
 
-function toggleTheme(){ setTheme(currentTheme === "light" ? "dark" : "light"); }
+function human(km) {
+  const k = Math.floor(km / 1000);
+  if (km >= 1000) {
+    return currentLang === 'ru' ? `${k} тыс. ${t('km')}` : `${k}k ${t('km')}`;
+  }
+  return `${km} ${t('km')}`;
+}
 
-// LANGUAGE
-function setLanguage(lang){
+function setLanguage(lang) {
   currentLang = lang;
-  localStorage.setItem("lang", lang);
   document.documentElement.lang = lang;
-  const langToggle = document.getElementById("langToggle");
-  if (langToggle) langToggle.textContent = lang === "ru" ? "RU" : "EN";
-  // update UI texts
-  document.getElementById("pageTitle").textContent = t("title");
-  document.getElementById("pageSubtitle").textContent = t("subtitle");
-  document.getElementById("labelVin").textContent = t("labelVin");
-  document.getElementById("labelMileage").textContent = t("labelMileage");
-  document.getElementById("submitBtn").textContent = t("btnSubmit");
-  // re-render last result in current language
-  if (lastQuery.carKey) renderReport(lastQuery.carKey, lastQuery.mileage);
-}
-
-function toggleLang(){ setLanguage(currentLang === "ru" ? "en" : "ru"); }
-
-// ERRORS
-function showError(msg){ errorMsg.textContent = msg; errorMsg.hidden = false; }
-function clearError(){ errorMsg.hidden = true; errorMsg.textContent = ""; }
-
-// UTIL
-function human(km){
-  const absKm = Math.abs(km);
-  if (absKm >= 1000){
-    const k = Math.round(absKm / 1000);
-    return currentLang === "ru" ? `${k} тыс. ${t('km')}` : `${k}k ${t('km')}`;
+  document.getElementById('langToggle').textContent = lang === 'ru' ? 'RU' : 'EN';
+  updateUITexts();
+  if (lastQuery.carKey) {
+    renderReport(lastQuery.carKey, lastQuery.mileage);
   }
-  return `${Math.round(absKm)} ${t('km')}`;
 }
 
-function findCar(query){
-  if (!query) return null;
+function setTheme(theme) {
+  currentTheme = theme;
+  document.documentElement.setAttribute('data-theme', theme);
+  document.getElementById('themeIcon').src = theme === 'dark' ? 'icons/moon.svg' : 'icons/sun.svg';
+  const meta = document.querySelector('meta[name="theme-color"]');
+  if (meta) meta.setAttribute('content', theme === 'dark' ? '#000000' : '#ffffff');
+}
+
+function updateUITexts() {
+  document.getElementById('pageTitle').textContent = t('title');
+  document.getElementById('pageSubtitle').textContent = t('subtitle');
+  document.getElementById('labelVin').textContent = t('labelVin');
+  document.getElementById('labelMileage').textContent = t('labelMileage');
+  document.getElementById('submitBtn').textContent = t('btnSubmit');
+  document.title = t('title');
+}
+
+function findCar(query) {
   const q = query.toLowerCase();
-  // relaxed matching: check if any car key or name appears in query
-  for (const key of Object.keys(cars)){
-    const normalizedKey = key.toLowerCase();
-    if (q.includes(normalizedKey.replace(/\s+/g, '')) || q.includes(normalizedKey)) return key;
-    // also check common model names like "prius" etc.
-    const parts = normalizedKey.split(' ');
-    for (const p of parts){
-      if (p && q.includes(p)) return key;
-    }
-  }
+  if (q.includes('prius') && (q.includes('2021') || q.includes('21'))) return 'prius 2021';
+  if (q.includes('fit') && q.includes('2020')) return 'fit 2020';
+  if ((q.includes('escudo') || q.includes('vitara')) && q.includes('2015')) return 'escudo 2015';
+  if (q.includes('xv') && q.includes('2019')) return 'xv 2019';
+  if (q.includes('c200') && q.includes('2019')) return 'c200 2019';
   return null;
 }
 
-// RENDER
-function renderReport(carKey, mileage){
-  const car = cars[carKey];
-  if (!car) return;
-  // compute next service based on car.intervals (default fallback)
-  const baseInterval = car.intervals || 10000;
-  const nextTO = Math.ceil(mileage / baseInterval) * baseInterval || baseInterval;
+function renderReport(carKey, mileage) {
+  const car = carsData[carKey];
+  const nextTO = Math.ceil(mileage / car.intervals) * car.intervals;
   const diff = nextTO - mileage;
   const isOverdue = diff < 0;
 
@@ -168,57 +139,55 @@ function renderReport(carKey, mileage){
       <h2>${t('nextTO')}</h2>
       <p class="next-to-subtitle">${t('recommendedByManufacturer')}</p>
       <p class="next-to-value">${human(nextTO)}</p>
-      <p class="next-to-diff">${isOverdue ? t('overdue') : t('dueIn')} ${Math.abs(diff)} ${t('km')}</p>
+      <p class="next-to-diff">
+        ${isOverdue ? t('overdue') : t('dueIn')} ${Math.abs(diff)} ${t('km')}
+      </p>
     </div>
   `;
 
-  // Oil
-  if (car.oil){
-    html += `<div class="card"><h3>${t('oil')}</h3><p>${car.oil.type} — ${t('every')} ${human(car.oil.every || car.oil.every)}</p>`;
-    if (car.oil.brands && car.oil.brands.length) html += `<p class="small">${car.oil.brands.join(', ')}</p>`;
-    html += `</div>`;
+  // Масло
+  html += `<div class="card"><h3>${t('oil')}</h3><p>${car.oil.type} — ${t('every')} ${human(car.oil.every)}</p><p class="small">${car.oil.brands.join(', ')}</p></div>`;
+
+  // Фильтры
+  html += `<div class="card"><h3>${t('filters')}</h3><ul>`;
+  html += `<li>${t('oilFilter')} — ${t('at')} ${human(car.filters.oil.interval)}<br><span class="small">${car.filters.oil.parts.join(', ')}</span></li>`;
+  html += `<li>${t('airFilter')} — ${t('at')} ${human(car.filters.air.interval)}<br><span class="small">${car.filters.air.parts.join(', ')}</span></li>`;
+  html += `<li>${t('cabinFilter')} — ${t('at')} ${human(car.filters.cabin.interval)}<br><span class="small">${car.filters.cabin.parts.join(', ')}</span></li>`;
+  if (car.filters.fuel) {
+    html += `<li>${t('fuelFilter')} — ${t('at')} ${human(car.filters.fuel.interval)}<br><span class="small">${car.filters.fuel.parts.join(', ')}</span></li>`;
+  }
+  html += `</ul></div>`;
+
+  // Тормоза
+  html += `
+    <div class="card">
+      <h3>${t('brakes')}</h3>
+      <h4>${t('brakeFront')}</h4>
+      <p>${t('replaceAt')} ${human(car.brakePads.front.interval)}</p>
+      <p class="small">${car.brakePads.front.parts.join(', ')}</p>
+      <h4>${t('brakeRear')}</h4>
+      <p>${t('replaceAt')} ${human(car.brakePads.rear.interval)}</p>
+      <p class="small">${car.brakePads.rear.parts.join(', ')}</p>
+    </div>
+  `;
+
+  // Свечи
+  if (car.sparkPlugs) {
+    html += `<div class="card"><h3>${t('sparkPlugs')}</h3><p>${t('replaceAt')} ${human(car.sparkPlugs.interval)}</p><p class="small">${car.sparkPlugs.parts.join(', ')}</p></div>`;
   }
 
-  // Filters
-  if (car.filters){
-    html += `<div class="card"><h3>${t('filters')}</h3><ul>`;
-    if (car.filters.oil) html += `<li>${t('oilFilter')} — ${t('at')} ${human(car.filters.oil.interval)}<br><span class="small">${(car.filters.oil.parts||[]).join(', ')}</span></li>`;
-    if (car.filters.air) html += `<li>${t('airFilter')} — ${t('at')} ${human(car.filters.air.interval)}<br><span class="small">${(car.filters.air.parts||[]).join(', ')}</span></li>`;
-    if (car.filters.cabin) html += `<li>${t('cabinFilter')} — ${t('at')} ${human(car.filters.cabin.interval)}<br><span class="small">${(car.filters.cabin.parts||[]).join(', ')}</span></li>`;
-    if (car.filters.fuel) html += `<li>${t('fuelFilter')} — ${t('at')} ${human(car.filters.fuel.interval)}<br><span class="small">${(car.filters.fuel.parts||[]).join(', ')}</span></li>`;
-    html += `</ul></div>`;
-  }
-
-  // Brakes
-  if (car.brakePads){
-    html += `
-      <div class="card">
-        <h3>${t('brakes')}</h3>
-        <h4>${t('brakeFront')}</h4>
-        <p>${t('replaceAt')} ${human(car.brakePads.front.interval)}</p>
-        <p class="small">${(car.brakePads.front.parts||[]).join(', ')}</p>
-        <h4>${t('brakeRear')}</h4>
-        <p>${t('replaceAt')} ${human(car.brakePads.rear.interval)}</p>
-        <p class="small">${(car.brakePads.rear.parts||[]).join(', ')}</p>
-      </div>
-    `;
-  }
-
-  // Spark plugs
-  if (car.sparkPlugs){
-    html += `<div class="card"><h3>${t('sparkPlugs')}</h3><p>${t('replaceAt')} ${human(car.sparkPlugs.interval)}</p><p class="small">${(car.sparkPlugs.parts||[]).join(', ')}</p></div>`;
-  }
-
-  // Timing
-  if (car.timing){
+  // ГРМ
+  if (car.timing) {
     const type = car.timing.type === "chain" ? t('chain') : t('belt');
     html += `<div class="card"><h3>${t('timing')} (${type})</h3><p>${t('inspectAt')} ${human(car.timing.check)}`;
-    if (car.timing.replace) html += `<br>${t('replaceAt')} ${human(car.timing.replace)}`;
+    if (car.timing.replace) {
+      html += `<br>${t('replaceAt')} ${human(car.timing.replace)}`;
+    }
     html += `</p></div>`;
   }
 
-  // Tires
-  if (car.tires){
+  // Колёса
+  if (car.tires) {
     html += `
       <div class="card">
         <h3>${t('wheels')}</h3>
@@ -230,51 +199,68 @@ function renderReport(carKey, mileage){
     `;
   }
 
-  // Notes
-  if (car.notes && car.notes[currentLang] && car.notes[currentLang].length){
+  // Рекомендации
+  if (car.notes && car.notes[currentLang] && car.notes[currentLang].length) {
     html += `<div class="card"><h3>${t('recommendations')}</h3><ul>`;
     car.notes[currentLang].forEach(n => html += `<li>${n}</li>`);
     html += `</ul></div>`;
   }
 
-  resultEl.innerHTML = html;
-  resultEl.style.display = "block";
+  document.getElementById('result').innerHTML = html;
+  document.getElementById('result').style.display = 'block';
   lastQuery = { carKey, mileage };
-  resultEl.scrollIntoView({ behavior: "smooth" });
 }
 
-// LOAD CARS (cars.json)
-function loadCars(){
-  return fetch("assets/cars.json").then(r=>{
-    if (!r.ok) throw new Error("network");
-    return r.json();
-  }).then(data=>{ cars = data; }).catch(err=>{ showError(currentLang==='ru' ? 'Ошибка загрузки данных автомобилей' : 'Failed to load cars data'); });
-}
-
-// EVENTS
-document.getElementById("langToggle").addEventListener("click", ()=>{ toggleLang(); });
-document.getElementById("themeToggle").addEventListener("click", ()=>{ toggleTheme(); });
-document.getElementById("submitBtn").addEventListener("click", ()=>{
-  clearError();
-  const vin = document.getElementById("vin").value.trim();
-  const mileage = parseInt(document.getElementById("mileage").value) || 0;
-  if (!vin) return alert(t('labelVin') + '?');
-  if (mileage < 0 || mileage > 500000) return alert(t('labelMileage') + ': 0–500,000 km');
-  const carKey = findCar(vin);
-  if (carKey && cars[carKey]){
-    renderReport(carKey, mileage);
-  } else {
-    const msg = currentLang === 'ru' 
-      ? `<h2>${t('notFoundTitle')}</h2><p>${t('supportedList')}</p>` 
-      : `<h2>${t('notFoundTitle')}</h2><p>${t('supportedList')}</p>`;
-    resultEl.innerHTML = `<div class="card">${msg}</div>`;
-    resultEl.style.display = 'block';
-    lastQuery = { carKey: null, mileage: 0 };
+// === ИНИЦИАЛИЗАЦИЯ ===
+async function init() {
+  try {
+    const response = await fetch('assets/cars.json');
+    carsData = await response.json();
+  } catch (e) {
+    console.error('Не удалось загрузить cars.json:', e);
+    // fallback на встроенные данные (можно раскомментировать при необходимости)
   }
-});
-document.addEventListener("keypress", e => { if (e.key === "Enter") document.getElementById("submitBtn").click(); });
 
-// INIT
-setTheme(currentTheme);
-setLanguage(currentLang);
-loadCars();
+  setTheme(currentTheme);
+  setLanguage(currentLang);
+
+  // Обработчики
+  document.getElementById('langToggle').addEventListener('click', () => {
+    setLanguage(currentLang === 'ru' ? 'en' : 'ru');
+  });
+
+  document.getElementById('themeToggle').addEventListener('click', () => {
+    setTheme(currentTheme === 'light' ? 'dark' : 'light');
+  });
+
+  document.getElementById('submitBtn').addEventListener('click', () => {
+    const vin = document.getElementById('vin').value.trim();
+    const mileage = parseInt(document.getElementById('mileage').value) || 0;
+
+    if (!vin) return alert(t('labelVin') + '?');
+    if (mileage < 0 || mileage > 500000) return alert(t('labelMileage') + ': 0–500,000 km');
+
+    const carKey = findCar(vin);
+    if (carKey && carsData[carKey]) {
+      renderReport(carKey, mileage);
+    } else {
+      const msg = currentLang === 'ru' 
+        ? '<h2>Авто не найдено</h2><p>Поддерживаемые: Prius 2021, Fit 2020, Escudo 2015, XV 2019, C200 2019</p>' 
+        : '<h2>Not found</h2><p>Supported: Prius 2021, Fit 2020, Escudo 2015, XV 2019, C200 2019</p>';
+      document.getElementById('result').innerHTML = `<div class="card">${msg}</div>`;
+      document.getElementById('result').style.display = 'block';
+      lastQuery = { carKey: null, mileage: 0 };
+    }
+  });
+
+  document.addEventListener('keypress', e => {
+    if (e.key === 'Enter') document.getElementById('submitBtn').click();
+  });
+}
+
+// Запуск при загрузке
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}
