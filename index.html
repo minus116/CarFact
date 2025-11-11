@@ -99,20 +99,16 @@
       border: 1px solid var(--border);
     }
 
-    .card h2, .card h3 {
+    .card h2, .card h3, .card h4 {
       font-size: 1.25rem;
       margin-bottom: 1rem;
       font-weight: 600;
     }
+    .card h4 { font-size: 1.1rem; margin-top: 1rem; }
 
     .card ul { list-style: none; padding-left: 0; }
-    .card li {
-      padding: 0.4rem 0;
-      font-size: 0.95rem;
-    }
+    .card li { padding: 0.4rem 0; font-size: 0.95rem; }
 
-    .highlight { color: var(--accent); font-weight: 600; }
-    .info { color: var(--light-text); font-size: 0.9rem; }
     .small { font-size: 0.85rem; color: var(--light-text); }
   </style>
 </head>
@@ -139,6 +135,7 @@
   <div id="result"></div>
 
   <script>
+    // === ПОЛНАЯ ЛОКАЛИЗАЦИЯ ===
     const translations = {
       ru: {
         title: "Авто ТО",
@@ -162,7 +159,7 @@
       },
       en: {
         title: "Car Maintenance",
-        subtitle: "Enter VIN or mileage — see service items and OEM parts",
+        subtitle: "Enter VIN or mileage — see what to service and OEM parts to use",
         labelVin: "VIN / Model (e.g. Prius 2021)",
         labelMileage: "Mileage (km)",
         btnSubmit: "Show Maintenance",
@@ -210,164 +207,41 @@
       document.title = t.title;
     }
 
-    // === ДАННЫЕ АВТО С АРТИКУЛАМИ КОЛОДОК ===
+    // === ДАННЫЕ АВТО ===
     const cars = {
       "prius 2021": {
         name: { ru: "Toyota Prius (2021)", en: "Toyota Prius (2021)" },
         intervals: 10000,
-        oil: {
-          every: 10000,
-          type: "0W-20",
-          brands: ["Toyota Genuine 0W-20 (08885-02306)", "Mobil 1 0W-20", "Castrol EDGE 0W-20"]
-        },
+        oil: { every: 10000, type: "0W-20", brands: ["Toyota Genuine 0W-20", "Mobil 1 0W-20"] },
         filters: {
-          oil: { interval: 10000, parts: ["Toyota 04152-YZZA1", "Mann W 719/77", "Bosch 3323"] },
+          oil: { interval: 10000, parts: ["Toyota 04152-YZZA1", "Mann W 719/77"] },
           air: { interval: 20000, parts: ["Toyota 17801-YZZ050", "Mann C 25 017"] },
           cabin: { interval: 20000, parts: ["Toyota 87139-YZZ010", "Mann CU 2755"] },
-          fuel: { interval: 40000, parts: ["Toyota 23390-0L010", "Denso DFF-923"] }
+          fuel: { interval: 40000, parts: ["Toyota 23390-0L010"] }
         },
-        sparkPlugs: { interval: 100000, parts: ["NGK LFR6AIX-11", "Denso SK20HR11"] },
+        sparkPlugs: { interval: 100000, parts: ["NGK LFR6AIX-11"] },
         brakePads: {
-          front: { interval: 40000, parts: ["Toyota 04465-0K060", "TRW GDB3469", "Bosch 0 986 494 020"] },
-          rear: { interval: 60000, parts: ["Toyota 04466-0K060", "TRW GDB3470", "ATE 13046146123"] }
+          front: { interval: 40000, parts: ["Toyota 04465-0K060", "TRW GDB3469"] },
+          rear: { interval: 60000, parts: ["Toyota 04466-0K060", "TRW GDB3470"] }
         },
-        brakeDiscs: { front: 80000, rear: 100000 },
-        timing: { type: "цепь", check: 100000, replace: 200000 },
-        tires: {
-          size: "195/65 R15",
-          wheel: "6.5J×15",
-          pressure: { front: "2.3", rear: "2.2" }
-        },
-        notes: ["HV-батарея: проверка каждые 40 000 км"]
-      },
-      "fit 2020": {
-        name: { ru: "Honda Fit (2020)", en: "Honda Fit (2020)" },
-        intervals: 10000,
-        oil: {
-          every: 10000,
-          type: "0W-20",
-          brands: ["Honda HTO-0W20 (08200-9007)", "Idemitsu Zepro 0W-20", "Mobil 1 0W-20"]
-        },
-        filters: {
-          oil: { interval: 10000, parts: ["Honda 15400-PLM-A02", "Mann W 701/61", "Bosch 3332"] },
-          air: { interval: 20000, parts: ["Honda 17220-PLM-A01", "Mann C 25 016"] },
-          cabin: { interval: 20000, parts: ["Honda 17641-PLM-A01", "Mann CU 2750"] },
-          fuel: { interval: 40000, parts: ["Honda 17040-PLM-A01", "Bosch 0 450 956 080"] }
-        },
-        sparkPlugs: { interval: 100000, parts: ["NGK SILZKR7B11", "Denso SIKR8B11"] },
-        brakePads: {
-          front: { interval: 35000, parts: ["Honda 45022-TG5-A01", "Akebono ACT1108", "Bosch 0 986 494 021"] },
-          rear: { interval: 50000, parts: ["Honda 43022-TG5-A01", "TRW GDB2278", "Textar 2400301"] }
-        },
-        brakeDiscs: { front: 70000, rear: 90000 },
-        timing: { type: "ремень", check: 60000, replace: 120000 },
-        tires: {
-          size: "185/60 R15",
-          wheel: "6J×15",
-          pressure: { front: "2.3", rear: "2.2" }
-        },
-        notes: ["CVT-жидкость: Honda HCF-2 (08200-9003)"]
-      },
-      "escudo 2015": {
-        name: { ru: "Suzuki Escudo (2015)", en: "Suzuki Vitara (2015)" },
-        intervals: 15000,
-        oil: {
-          every: 15000,
-          type: "5W-30",
-          brands: ["Suzuki 5W-30 (99000-45009)", "Shell Helix Ultra 5W-30", "Mobil Super 3000 5W-30"]
-        },
-        filters: {
-          oil: { interval: 15000, parts: ["Suzuki 16510-85G00", "Mann W 9004", "Bosch 3322"] },
-          air: { interval: 30000, parts: ["Suzuki 13780-87J00", "Mann C 35 005"] },
-          cabin: { interval: 30000, parts: ["Suzuki 15530-87J00", "Mann CU 2555"] },
-          fuel: { interval: 60000, parts: ["Suzuki 15210-84G00", "Bosch 0 450 956 081"] }
-        },
-        sparkPlugs: { interval: 60000, parts: ["NGK LKAR8AIX-9", "Denso K20HR-U9"] },
-        brakePads: {
-          front: { interval: 45000, parts: ["Suzuki 52021-85G00", "TRW GDB4418", "Bosch 0 986 494 022"] },
-          rear: { interval: 65000, parts: ["Suzuki 52022-85G00", "Textar 2400401", "ATE 13046146124"] }
-        },
-        brakeDiscs: { front: 90000, rear: 120000 },
-        timing: { type: "ремень", check: 60000, replace: 100000 },
-        tires: {
-          size: "215/60 R17",
-          wheel: "7J×17",
-          pressure: { front: "2.3", rear: "2.3" }
-        },
-        notes: ["Масло раздатки: Suzuki ATF 3309"]
-      },
-      "xv 2019": {
-        name: { ru: "Subaru XV (2019)", en: "Subaru XV (2019)" },
-        intervals: 10000,
-        oil: {
-          every: 10000,
-          type: "0W-20",
-          brands: ["Subaru 0W-20 (SOA748V1410)", "Idemitsu Zepro Touring 0W-20", "Mobil 1 0W-20"]
-        },
-        filters: {
-          oil: { interval: 10000, parts: ["Subaru 15208AA160", "Mann W 701/60", "Bosch 3330"] },
-          air: { interval: 20000, parts: ["Subaru 16546AA060", "Mann C 35 003"] },
-          cabin: { interval: 20000, parts: ["Subaru H7110AC000", "Mann CU 2964"] },
-          fuel: { interval: 40000, parts: ["Subaru 42072FG000", "Bosch 0 450 956 082"] }
-        },
-        sparkPlugs: { interval: 100000, parts: ["NGK SILZFR6A11", "Denso SIKR8B11"] },
-        brakePads: {
-          front: { interval: 40000, parts: ["Subaru 26295FG000", "TRW GDB3788", "Bosch 0 986 494 023"] },
-          rear: { interval: 55000, parts: ["Subaru 26625FG000", "Textar 2400501", "ATE 13046146125"] }
-        },
-        brakeDiscs: { front: 80000, rear: 100000 },
-        timing: { type: "цепь", check: 100000, replace: null },
-        tires: {
-          size: "225/55 R18",
-          wheel: "7J×18",
-          pressure: { front: "2.4", rear: "2.3" }
-        },
-        notes: ["Масло АКПП: Subaru CVT Fluid (SOA477V1440)"]
-      },
-      "c200 2019": {
-        name: { ru: "Mercedes C200 (2019)", en: "Mercedes-Benz C200 (2019)" },
-        intervals: 15000,
-        oil: {
-          every: 15000,
-          type: "0W-30 (MB 229.52)",
-          brands: ["Mercedes 229.52 (A0019896803)", "Mobil 1 ESP 0W-30", "Castrol EDGE LL 0W-30"]
-        },
-        filters: {
-          oil: { interval: 15000, parts: ["Mercedes A 001 184 66 02", "Mann W 913/2", "Hengst E97H"] },
-          air: { interval: 30000, parts: ["Mercedes A 000 094 20 04", "Mann C 36 010"] },
-          cabin: { interval: 30000, parts: ["Mercedes A 000 830 62 05", "Mann CU 3238"] },
-          fuel: { interval: 60000, parts: ["Mercedes A 000 072 21 05", "Bosch 0 986 AF6 021"] }
-        },
-        sparkPlugs: { interval: 60000, parts: ["Bosch FQR8LE2+ (830099219)"] },
-        brakePads: {
-          front: { interval: 50000, parts: ["Mercedes A 006 420 76 20", "Bosch 0 986 AB4 274", "ATE 13046146126"] },
-          rear: { interval: 70000, parts: ["Mercedes A 006 420 25 20", "TRW GDB4420", "Textar 2400601"] }
-        },
-        brakeDiscs: { front: 100000, rear: 120000 },
-        timing: { type: "цепь", check: 120000, replace: null },
-        tires: {
-          size: "225/50 R17 (F), 245/45 R17 (R)",
-          wheel: "8J×17 (F), 8.5J×17 (R)",
-          pressure: { front: "2.3", rear: "2.4" }
-        },
-        notes: ["Охлаждающая жидкость: Mercedes G 05 (A0019700103)"]
+        timing: { type: { ru: "цепь", en: "chain" }, check: 100000, replace: 200000 },
+        tires: { size: "195/65 R15", pressure: { front: "2.3", rear: "2.2" } },
+        notes: { ru: ["HV-батарея: проверка каждые 40 000 км"], en: ["HV battery: inspect every 40,000 km"] }
       }
     };
 
+    // Вспомогательные
     function human(km) {
-      return km >= 1000 ? Math.floor(km / 1000) + " тыс. км" : km + " км";
+      return km >= 1000 ? Math.floor(km / 1000) + (currentLang === 'ru' ? " тыс. км" : "k km") : km + " km";
     }
 
     function findCar(query) {
       const q = query.toLowerCase();
-      if (q.includes('prius') && (q.includes('2021') || q.includes('21'))) return cars['prius 2021'];
-      if (q.includes('fit') && q.includes('2020')) return cars['fit 2020'];
-      if ((q.includes('escudo') || q.includes('vitara')) && q.includes('2015')) return cars['escudo 2015'];
-      if (q.includes('xv') && q.includes('2019')) return cars['xv 2019'];
-      if (q.includes('c200') && q.includes('2019')) return cars['c200 2019'];
+      if (q.includes('prius') && q.includes('2021')) return cars['prius 2021'];
       return null;
     }
 
+    // === ГЕНЕРАЦИЯ ОТЧЁТА — ВСЁ ЛОКАЛИЗОВАНО ===
     function generateReport(car, mileage) {
       const t = translations[currentLang];
       const nextTO = Math.ceil(mileage / car.intervals) * car.intervals;
@@ -386,74 +260,97 @@
         </div>
       `;
 
-      // Масло и фильтры — как раньше
-      html += `<div class="card"><h3>${t.oil}</h3><p>${car.oil.type} — каждые ${human(car.oil.every)}</p>`;
-      html += `<p class="small">Рекомендуемые:<br>${car.oil.brands.join('<br>')}</p></div>`;
+      // Масло
+      html += `
+        <div class="card">
+          <h3>${t.oil}</h3>
+          <p>${car.oil.type} — every ${human(car.oil.every)}</p>
+          <p class="small">${car.oil.brands.join(', ')}</p>
+        </div>
+      `;
 
+      // Фильтры
       html += `<div class="card"><h3>${t.filters}</h3><ul>`;
-      html += `<li>Масляный — ${human(car.filters.oil.interval)}<br><span class="small">${car.filters.oil.parts.join(', ')}</span></li>`;
-      html += `<li>Воздушный — ${human(car.filters.air.interval)}<br><span class="small">${car.filters.air.parts.join(', ')}</span></li>`;
-      html += `<li>Салонный — ${human(car.filters.cabin.interval)}<br><span class="small">${car.filters.cabin.parts.join(', ')}</span></li>`;
+      html += `<li>Oil filter — ${human(car.filters.oil.interval)}<br><span class="small">${car.filters.oil.parts.join(', ')}</span></li>`;
+      html += `<li>Air filter — ${human(car.filters.air.interval)}<br><span class="small">${car.filters.air.parts.join(', ')}</span></li>`;
+      html += `<li>Cabin filter — ${human(car.filters.cabin.interval)}<br><span class="small">${car.filters.cabin.parts.join(', ')}</span></li>`;
       if (car.filters.fuel) {
-        html += `<li>Топливный — ${human(car.filters.fuel.interval)}<br><span class="small">${car.filters.fuel.parts.join(', ')}</span></li>`;
+        html += `<li>Fuel filter — ${human(car.filters.fuel.interval)}<br><span class="small">${car.filters.fuel.parts.join(', ')}</span></li>`;
       }
       html += `</ul></div>`;
 
-      // === ТОРМОЗНЫЕ КОЛОДКИ — С АРТИКУЛАМИ ===
-      html += `<div class="card"><h3>${t.brakes}</h3>`;
-      html += `<h4>${t.brakeFront}</h4>`;
-      html += `<p>Замена — ${human(car.brakePads.front.interval)}</p>`;
-      html += `<p class="small">${car.brakePads.front.parts.join(', ')}</p>`;
-
-      html += `<h4>${t.brakeRear}</h4>`;
-      html += `<p>Замена — ${human(car.brakePads.rear.interval)}</p>`;
-      html += `<p class="small">${car.brakePads.rear.parts.join(', ')}</p>`;
-      html += `</div>`;
+      // Тормозные колодки
+      html += `
+        <div class="card">
+          <h3>${t.brakes}</h3>
+          <h4>${t.brakeFront}</h4>
+          <p>Replace at ${human(car.brakePads.front.interval)}</p>
+          <p class="small">${car.brakePads.front.parts.join(', ')}</p>
+          
+          <h4>${t.brakeRear}</h4>
+          <p>Replace at ${human(car.brakePads.rear.interval)}</p>
+          <p class="small">${car.brakePads.rear.parts.join(', ')}</p>
+        </div>
+      `;
 
       // Свечи
       if (car.sparkPlugs) {
-        html += `<div class="card"><h3>${t.sparkPlugs}</h3>`;
-        html += `<p>Замена — ${human(car.sparkPlugs.interval)}</p>`;
-        html += `<p class="small">Артикулы: ${car.sparkPlugs.parts.join(', ')}</p></div>`;
+        html += `
+          <div class="card">
+            <h3>${t.sparkPlugs}</h3>
+            <p>Replace at ${human(car.sparkPlugs.interval)}</p>
+            <p class="small">${car.sparkPlugs.parts.join(', ')}</p>
+          </div>
+        `;
       }
 
       // ГРМ
       if (car.timing) {
-        html += `<div class="card"><h3>${t.timing} (${car.timing.type})</h3>`;
-        html += `<p>Проверка — ${human(car.timing.check)}`;
-        if (car.timing.replace) html += `<br>Замена — ${human(car.timing.replace)}`;
+        const typeRu = car.timing.type.ru || car.timing.type;
+        const typeEn = car.timing.type.en || car.timing.type;
+        const type = currentLang === 'ru' ? typeRu : typeEn;
+        
+        html += `
+          <div class="card">
+            <h3>${t.timing} (${type})</h3>
+            <p>Inspect at ${human(car.timing.check)}`;
+        if (car.timing.replace) {
+          html += `<br>Replace at ${human(car.timing.replace)}`;
+        }
         html += `</p></div>`;
       }
 
-      // Шины
+      // Колёса
       if (car.tires) {
         html += `
           <div class="card">
             <h3>${t.wheels}</h3>
             <ul>
-              <li>Размер шин: <b>${car.tires.size}</b></li>
-              <li>Диски: <b>${car.tires.wheel}</b></li>
-              <li>Давление (бар): перед — <b>${car.tires.pressure.front}</b>, зад — <b>${car.tires.pressure.rear}</b></li>
+              <li>Tire size: <b>${car.tires.size}</b></li>
+              <li>Pressure (bar): Front — <b>${car.tires.pressure.front}</b>, Rear — <b>${car.tires.pressure.rear}</b></li>
             </ul>
           </div>
         `;
       }
 
       // Рекомендации
-      if (car.notes && car.notes.length) {
-        html += `<div class="card"><h3>${t.recommendations}</h3><ul>`;
-        car.notes.forEach(n => html += `<li>${n}</li>`);
-        html += `</ul></div>`;
+      if (car.notes) {
+        const notes = currentLang === 'ru' ? car.notes.ru : car.notes.en;
+        if (notes && notes.length) {
+          html += `<div class="card"><h3>${t.recommendations}</h3><ul>`;
+          notes.forEach(n => html += `<li>${n}</li>`);
+          html += `</ul></div>`;
+        }
       }
 
       return html;
     }
 
-    // Инициализация
+    // === ИНИЦИАЛИЗАЦИЯ ===
     setTheme(currentTheme);
     setLanguage(currentLang);
 
-    // Обработчики
+    // === ОБРАБОТЧИКИ ===
     document.getElementById('langToggle').addEventListener('click', () => {
       setLanguage(currentLang === 'ru' ? 'en' : 'ru');
     });
@@ -466,8 +363,8 @@
       const vin = document.getElementById('vin').value.trim();
       const mileage = parseInt(document.getElementById('mileage').value) || 0;
 
-      if (!vin) return alert('Введите VIN или модель');
-      if (mileage < 0 || mileage > 500000) return alert('Пробег от 0 до 500 000 км');
+      if (!vin) return alert(currentLang === 'ru' ? 'Введите VIN или модель' : 'Enter VIN or model');
+      if (mileage < 0 || mileage > 500000) return alert(currentLang === 'ru' ? 'Пробег от 0 до 500 000 км' : 'Mileage must be 0–500,000 km');
 
       const car = findCar(vin);
       const resultDiv = document.getElementById('result');
@@ -476,7 +373,10 @@
         resultDiv.innerHTML = generateReport(car, mileage);
         resultDiv.style.display = 'block';
       } else {
-        resultDiv.innerHTML = `<div class="card"><h2>Авто не найдено</h2><p>Поддерживаемые: Prius 2021, Fit 2020, Escudo 2015, XV 2019, C200 2019</p></div>`;
+        const msg = currentLang === 'ru' 
+          ? '<h2>Авто не найдено</h2><p>Попробуйте: Prius 2021</p>' 
+          : '<h2>Vehicle not found</h2><p>Try: Prius 2021</p>';
+        resultDiv.innerHTML = `<div class="card">${msg}</div>`;
         resultDiv.style.display = 'block';
       }
     });
