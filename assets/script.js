@@ -171,7 +171,7 @@ const translations = {
     cabinFilter: "Салонный",
     fuelFilter: "Топливный",
     sparkPlugs: "Свечи зажигания",
-    brakes: "Тормозные колодки",
+    brakes: "Тормозные колодки", 
     brakeFront: "Передние",
     brakeRear: "Задние",
     timing: "ГРМ",
@@ -228,7 +228,7 @@ const translations = {
     every: "every",
     at: "at",
     japan: "Japan",
-    china: "China",
+    china: "China", 
     korea: "Korea",
     europe: "Europe",
     tireBrands: "Tire Brands"
@@ -304,7 +304,7 @@ function renderReport(carKey, mileage) {
     </div>
 
     <div class="card">
-      <h3 data-toggle="oil">${t('oil')} <span class="toggle-icon">+</span></h3>
+      <h3 data-toggle="oil">${t('oil')} <span class="toggle-circle"></span></h3>
       <p>${t('every')} ${human(car.oil.every)}</p>
       <div id="oil" class="parts">
         <div class="dropdown-content">${car.oil.parts.join(', ')}</div>
@@ -312,7 +312,7 @@ function renderReport(carKey, mileage) {
     </div>
 
     <div class="card">
-      <h3 data-toggle="filters">${t('filters')} <span class="toggle-icon">+</span></h3>
+      <h3 data-toggle="filters">${t('filters')} <span class="toggle-circle"></span></h3>
       <ul>
         <li>${t('oilFilter')} — ${human(car.filters.oil.interval)}</li>
         <li>${t('airFilter')} — ${human(car.filters.air.interval)}</li>
@@ -330,7 +330,7 @@ function renderReport(carKey, mileage) {
     </div>
 
     <div class="card">
-      <h3 data-toggle="spark">${t('sparkPlugs')} <span class="toggle-icon">+</span></h3>
+      <h3 data-toggle="spark">${t('sparkPlugs')} <span class="toggle-circle"></span></h3>
       <p>${t('replaceAt')} ${human(car.sparkPlugs.interval)}</p>
       <div id="spark" class="parts">
         <div class="dropdown-content">${car.sparkPlugs.parts.join(', ')}</div>
@@ -339,13 +339,13 @@ function renderReport(carKey, mileage) {
 
     <div class="card">
       <h3>${t('brakes')}</h3>
-      <h4 data-toggle="brakes-front">${t('brakeFront')} <span class="toggle-icon">+</span></h4>
+      <h4 data-toggle="brakes-front">${t('brakeFront')} <span class="toggle-circle"></span></h4>
       <p>${t('replaceAt')} ${human(car.brakePads.front.interval)}</p>
       <div id="brakes-front" class="parts">
         <div class="dropdown-content">${car.brakePads.front.parts.join(', ')}</div>
       </div>
       
-      <h4 data-toggle="brakes-rear">${t('brakeRear')} <span class="toggle-icon">+</span></h4>
+      <h4 data-toggle="brakes-rear">${t('brakeRear')} <span class="toggle-circle"></span></h4>
       <p>${t('replaceAt')} ${human(car.brakePads.rear.interval)}</p>
       <div id="brakes-rear" class="parts">
         <div class="dropdown-content">${car.brakePads.rear.parts.join(', ')}</div>
@@ -353,7 +353,7 @@ function renderReport(carKey, mileage) {
     </div>
 
     <div class="card">
-      <h3 data-toggle="wheels">${t('wheels')} <span class="toggle-icon">+</span></h3>
+      <h3 data-toggle="wheels">${t('wheels')} <span class="toggle-circle"></span></h3>
       <ul>
         <li>${t('tireSize')}: <b>${car.tires.size}</b></li>
         <li>${t('pressure')}: ${t('front')} — <b>${car.tires.pressure.front}</b>, ${t('rear')} — <b>${car.tires.pressure.rear}</b></li>
@@ -388,11 +388,11 @@ function renderReport(carKey, mileage) {
         
         const targetId = this.getAttribute('data-toggle');
         const target = document.getElementById(targetId);
-        const icon = this.querySelector('.toggle-icon');
+        const circle = this.querySelector('.toggle-circle');
         
-        if (target && icon) {
+        if (target && circle) {
           target.classList.toggle('show');
-          icon.textContent = target.classList.contains('show') ? '−' : '+';
+          circle.classList.toggle('open');
         }
       });
     });
