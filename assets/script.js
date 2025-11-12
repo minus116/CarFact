@@ -171,7 +171,7 @@ const translations = {
     cabinFilter: "Салонный",
     fuelFilter: "Топливный",
     sparkPlugs: "Свечи зажигания",
-    brakes: "Тормозные колодки", 
+    brakes: "Тормозные колодки",
     brakeFront: "Передние",
     brakeRear: "Задние",
     timing: "ГРМ",
@@ -228,7 +228,7 @@ const translations = {
     every: "every",
     at: "at",
     japan: "Japan",
-    china: "China", 
+    china: "China",
     korea: "Korea",
     europe: "Europe",
     tireBrands: "Tire Brands"
@@ -243,7 +243,7 @@ function t(key) { return translations[currentLang][key] || key; }
 
 function human(km) {
   const k = Math.floor(km / 1000);
-  return currentLang === 'ru' ? `${k} тыс. ${t('km')}` : `${k}k ${t('km')}`;
+  return currentLang === 'ru' ? `${k} тыс. км` : `${k}k km`;
 }
 
 function setLanguage(lang) {
@@ -304,7 +304,10 @@ function renderReport(carKey, mileage) {
     </div>
 
     <div class="card">
-      <h3 data-toggle="oil">${t('oil')} <span class="toggle-circle"></span></h3>
+      <div class="toggle-container" data-toggle="oil">
+        <h3>${t('oil')}</h3>
+        <span class="toggle-circle"></span>
+      </div>
       <p>${t('every')} ${human(car.oil.every)}</p>
       <div id="oil" class="parts">
         <div class="dropdown-content">${car.oil.parts.join(', ')}</div>
@@ -312,7 +315,10 @@ function renderReport(carKey, mileage) {
     </div>
 
     <div class="card">
-      <h3 data-toggle="filters">${t('filters')} <span class="toggle-circle"></span></h3>
+      <div class="toggle-container" data-toggle="filters">
+        <h3>${t('filters')}</h3>
+        <span class="toggle-circle"></span>
+      </div>
       <ul>
         <li>${t('oilFilter')} — ${human(car.filters.oil.interval)}</li>
         <li>${t('airFilter')} — ${human(car.filters.air.interval)}</li>
@@ -330,7 +336,10 @@ function renderReport(carKey, mileage) {
     </div>
 
     <div class="card">
-      <h3 data-toggle="spark">${t('sparkPlugs')} <span class="toggle-circle"></span></h3>
+      <div class="toggle-container" data-toggle="spark">
+        <h3>${t('sparkPlugs')}</h3>
+        <span class="toggle-circle"></span>
+      </div>
       <p>${t('replaceAt')} ${human(car.sparkPlugs.interval)}</p>
       <div id="spark" class="parts">
         <div class="dropdown-content">${car.sparkPlugs.parts.join(', ')}</div>
@@ -338,22 +347,27 @@ function renderReport(carKey, mileage) {
     </div>
 
     <div class="card">
-      <h3>${t('brakes')}</h3>
-      <h4 data-toggle="brakes-front">${t('brakeFront')} <span class="toggle-circle"></span></h4>
-      <p>${t('replaceAt')} ${human(car.brakePads.front.interval)}</p>
-      <div id="brakes-front" class="parts">
-        <div class="dropdown-content">${car.brakePads.front.parts.join(', ')}</div>
+      <div class="toggle-container" data-toggle="brakes">
+        <h3>${t('brakes')}</h3>
+        <span class="toggle-circle"></span>
       </div>
-      
-      <h4 data-toggle="brakes-rear">${t('brakeRear')} <span class="toggle-circle"></span></h4>
-      <p>${t('replaceAt')} ${human(car.brakePads.rear.interval)}</p>
-      <div id="brakes-rear" class="parts">
-        <div class="dropdown-content">${car.brakePads.rear.parts.join(', ')}</div>
+      <ul>
+        <li>${t('brakeFront')} — ${human(car.brakePads.front.interval)}</li>
+        <li>${t('brakeRear')} — ${human(car.brakePads.rear.interval)}</li>
+      </ul>
+      <div id="brakes" class="parts">
+        <div class="dropdown-content">
+          <strong>${t('brakeFront')}:</strong> ${car.brakePads.front.parts.join(', ')}<br>
+          <strong>${t('brakeRear')}:</strong> ${car.brakePads.rear.parts.join(', ')}
+        </div>
       </div>
     </div>
 
     <div class="card">
-      <h3 data-toggle="wheels">${t('wheels')} <span class="toggle-circle"></span></h3>
+      <div class="toggle-container" data-toggle="wheels">
+        <h3>${t('wheels')}</h3>
+        <span class="toggle-circle"></span>
+      </div>
       <ul>
         <li>${t('tireSize')}: <b>${car.tires.size}</b></li>
         <li>${t('pressure')}: ${t('front')} — <b>${car.tires.pressure.front}</b>, ${t('rear')} — <b>${car.tires.pressure.rear}</b></li>
@@ -411,13 +425,13 @@ function attachScrollEffect() {
   function updateSpacing() {
     const scrollTop = window.scrollY;
     if (scrollTop < 100) {
-      cards.forEach(card => card.style.marginBottom = '16px');
+      cards.forEach(card => card.style.marginBottom = '12px');
       ticking = false;
       return;
     }
 
-    const baseGap = 16;
-    const maxExtra = 24;
+    const baseGap = 12;
+    const maxExtra = 16;
     const factor = Math.min(1, (scrollTop - 100) / 700);
     const dynamicGap = baseGap + factor * maxExtra;
 
