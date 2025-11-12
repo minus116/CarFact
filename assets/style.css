@@ -55,14 +55,14 @@ header {
   z-index: 100;
   display: flex;
   justify-content: space-between;
-  align-items: center; /* Выравнивание по центру */
+  align-items: center;
   gap: 1rem;
   border-bottom: 1px solid var(--border);
   box-sizing: border-box;
 }
 
 main {
-  padding-top: 120px; /* Поля ввода ниже заголовка */
+  padding-top: 120px;
 }
 
 .logo h1 {
@@ -143,7 +143,7 @@ button.primary {
   padding: 1.4rem;
   margin-bottom: 1.2rem;
   border: 1px solid var(--border);
-  transition: margin-bottom 0.6s cubic-bezier(0.2, 0, 0.2, 1); /* Анимация растягивания */
+  transition: margin-bottom 0.6s cubic-bezier(0.2, 0, 0.2, 1);
 }
 
 .parts {
@@ -174,7 +174,6 @@ button.primary {
   text-align: right;
 }
 
-/* Стили для артикулов */
 .part-item {
   font-size: 0.85rem;
   color: var(--light-text);
