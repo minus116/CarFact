@@ -6,7 +6,7 @@ let carsData = {};
 const translations = {
   ru: {
     title: "CarFact.",
-    subtitle: "Введите VIN или номер кузова — узнайте, что менять и какие запчасти использовать",
+    tagline: "Факты, а не догадки.",
     labelVin: "VIN / Номер кузова / Модель",
     labelMileage: "Пробег (км)",
     btnSubmit: "Показать ТО",
@@ -41,7 +41,7 @@ const translations = {
   },
   en: {
     title: "CarFact.",
-    subtitle: "Enter VIN or body number — see what to service and which parts to use",
+    tagline: "Facts, not guesses.",
     labelVin: "VIN / Body No. / Model",
     labelMileage: "Mileage (km)",
     btnSubmit: "Show Maintenance",
@@ -132,7 +132,7 @@ function setTheme(theme) {
 
 function updateUITexts() {
   document.getElementById('pageTitle').textContent = t('title');
-  document.getElementById('pageSubtitle').textContent = t('subtitle');
+  document.getElementById('pageTagline').textContent = t('tagline');
   document.getElementById('labelVin').textContent = t('labelVin');
   document.getElementById('labelMileage').textContent = t('labelMileage');
   document.getElementById('submitBtn').textContent = t('btnSubmit');
@@ -262,15 +262,12 @@ function renderReport(carKey, mileage) {
   document.getElementById('result').style.display = 'block';
   lastQuery = { carKey, mileage };
 
-  // Подключаем обработчики ПОСЛЕ вставки HTML
   attachPartToggleListeners();
   attachScrollEffect();
 }
 
-// ✅ Работающий клик по +/−
 function attachPartToggleListeners() {
   document.querySelectorAll('.card h3, .card h4').forEach(header => {
-    // Удаляем старые обработчики (защита от дубликатов)
     const clone = header.cloneNode(true);
     header.parentNode.replaceChild(clone, header);
     
@@ -284,7 +281,6 @@ function attachPartToggleListeners() {
   });
 }
 
-// ✅ Эффект растягивания при скролле (активируется после 100px)
 function attachScrollEffect() {
   const cards = document.querySelectorAll('.card');
   if (!cards.length) return;
