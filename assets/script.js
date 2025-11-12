@@ -158,7 +158,7 @@ const translations = {
     labelVin: "VIN / Номер кузова / Модель",
     labelMileage: "Пробег (км)",
     btnSubmit: "Показать ТО",
-    nextTO: "Ближайшее ТО в",
+    nextTO: "ближайшее техническое обслуживание",
     recommendedByManufacturer: "рекомендуемое заводом изготовителем",
     dueIn: "через",
     km: "км",
@@ -198,7 +198,7 @@ const translations = {
     labelVin: "VIN / Body No. / Model",
     labelMileage: "Mileage (km)",
     btnSubmit: "Show Maintenance",
-    nextTO: "Next Service at",
+    nextTO: "next service",
     recommendedByManufacturer: "as recommended by the manufacturer",
     dueIn: "due in",
     km: "km",
@@ -287,17 +287,14 @@ function renderReport(carKey, mileage) {
   const diff = nextTO - mileage;
   const isOverdue = diff < 0;
 
-  // Логика для "сейчас"
-  const nowText = diff === 0 ? t('now') : (isOverdue ? t('overdue') : t('dueIn'));
-  const diffValue = diff !== 0 ? Math.abs(diff) : '';
-  const diffUnit = diff !== 0 ? t('km') : '';
-
+  const nowText = diff === 0 ? t('now') : (isOverdue ? `${t('overdue')} ${Math.abs(diff)} ${t('km')}` : `${t('dueIn')} ${Math.abs(diff)} ${t('km')}`);
+  
   const tireRegions = car.tires.regions;
   
   let html = `
     <div class="card next-to-card">
       <h2>${t('nextTO')} ${human(nextTO)}</h2>
-      <p class="next-to-diff">${diff === 0 ? t('now') : (isOverdue ? `${t('overdue')} ${diffValue} ${t('km')}` : `${t('dueIn')} ${diffValue} ${t('km')}`)}</p>
+      <p class="next-to-diff">${diff === 0 ? t('now') : nowText}</p>
     </div>
 
     <div class="card">
@@ -360,7 +357,7 @@ function renderReport(carKey, mileage) {
       </div>
     </div>
 
-    <div class="card">
+    <div class="card wheels-card">
       <div class="toggle-container" data-toggle="wheels">
         <h3>${t('wheels')}</h3>
         <span class="toggle-circle"></span>
