@@ -314,27 +314,19 @@ function renderReport(carKey, mileage) {
     <div class="card">
       <h3 data-toggle="filters">${t('filters')} <span class="toggle-icon">+</span></h3>
       <ul>
-        <li data-toggle="oil-filter">${t('oilFilter')} — ${human(car.filters.oil.interval)} <span class="toggle-icon">+</span>
-          <div id="oil-filter" class="parts">
-            <div class="dropdown-content">${car.filters.oil.parts.join(', ')}</div>
-          </div>
-        </li>
-        <li data-toggle="air-filter">${t('airFilter')} — ${human(car.filters.air.interval)} <span class="toggle-icon">+</span>
-          <div id="air-filter" class="parts">
-            <div class="dropdown-content">${car.filters.air.parts.join(', ')}</div>
-          </div>
-        </li>
-        <li data-toggle="cabin-filter">${t('cabinFilter')} — ${human(car.filters.cabin.interval)} <span class="toggle-icon">+</span>
-          <div id="cabin-filter" class="parts">
-            <div class="dropdown-content">${car.filters.cabin.parts.join(', ')}</div>
-          </div>
-        </li>
-        ${car.filters.fuel ? `<li data-toggle="fuel-filter">${t('fuelFilter')} — ${human(car.filters.fuel.interval)} <span class="toggle-icon">+</span>
-          <div id="fuel-filter" class="parts">
-            <div class="dropdown-content">${car.filters.fuel.parts.join(', ')}</div>
-          </div>
-        </li>` : ''}
+        <li>${t('oilFilter')} — ${human(car.filters.oil.interval)}</li>
+        <li>${t('airFilter')} — ${human(car.filters.air.interval)}</li>
+        <li>${t('cabinFilter')} — ${human(car.filters.cabin.interval)}</li>
+        ${car.filters.fuel ? `<li>${t('fuelFilter')} — ${human(car.filters.fuel.interval)}</li>` : ''}
       </ul>
+      <div id="filters" class="parts">
+        <div class="dropdown-content">
+          <strong>${t('oilFilter')}:</strong> ${car.filters.oil.parts.join(', ')}<br>
+          <strong>${t('airFilter')}:</strong> ${car.filters.air.parts.join(', ')}<br>
+          <strong>${t('cabinFilter')}:</strong> ${car.filters.cabin.parts.join(', ')}<br>
+          ${car.filters.fuel ? `<strong>${t('fuelFilter')}:</strong> ${car.filters.fuel.parts.join(', ')}` : ''}
+        </div>
+      </div>
     </div>
 
     <div class="card">
@@ -382,7 +374,6 @@ function renderReport(carKey, mileage) {
   document.getElementById('result').style.display = 'block';
   lastQuery = { carKey, mileage };
 
-  // Универсальная функция для подключения обработчиков
   function setupToggleListeners() {
     document.querySelectorAll('[data-toggle]').forEach(el => {
       const originalHandler = el.onclick;
