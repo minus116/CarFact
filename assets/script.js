@@ -2,14 +2,14 @@ const carsData = {
   "prius 2021": {
     name: { ru: "Toyota Prius (2021)", en: "Toyota Prius (2021)" },
     intervals: 10000,
-    oil: { every: 10000, type: "0W-20", brands: ["Toyota Genuine 0W-20", "Mobil 1 0W-20"] },
+    oil: { every: 10000, type: "0W-20", parts: ["Toyota 04152-YZZA1", "Mann W 719/77"] },
     filters: {
       oil: { interval: 10000, parts: ["Toyota 04152-YZZA1", "Mann W 719/77"] },
       air: { interval: 20000, parts: ["Toyota 17801-YZZ050", "Mann C 25 017"] },
       cabin: { interval: 20000, parts: ["Toyota 87139-YZZ010", "Mann CU 2755"] },
       fuel: { interval: 40000, parts: ["Toyota 23390-0L010"] }
     },
-    sparkPlugs: { interval: 100000, parts: ["NGK LFR6AIX-11"] },
+    sparkPlugs: { interval: 100000, parts: ["NGK LFR6AIX-11", "Denso SK20HR11"] },
     brakePads: {
       front: { interval: 40000, parts: ["Toyota 04465-0K060", "TRW GDB3469"] },
       rear: { interval: 60000, parts: ["Toyota 04466-0K060", "TRW GDB3470"] }
@@ -148,32 +148,45 @@ function renderReport(carKey, mileage) {
     </div>
 
     <div class="card">
-      <h3>${t('oil')}</h3>
-      <p>${car.oil.type} — ${t('every')} ${human(car.oil.every)}</p>
-      <div class="parts">
-        <div class="part-item">${car.oil.brands.join(', ')}</div>
+      <h3 data-toggle="oil">${t('oil')} <span class="toggle-icon">+</span></h3>
+      <p>${t('every')} ${human(car.oil.every)}</p>
+      <div id="oil" class="parts">
+        <div class="part-item">${car.oil.parts.join(', ')}</div>
       </div>
     </div>
 
     <div class="card">
-      <h3>${t('filters')}</h3>
+      <h3 ${car.filters.fuel ? 'data-toggle="filters"' : ''}>${t('filters')} ${car.filters.fuel ? '<span class="toggle-icon">+</span>' : ''}</h3>
       <ul>
-        <li>${t('oilFilter')} — ${human(car.filters.oil.interval)}
-          <div class="parts">
+        <li data-toggle="oil-filter">${t('oilFilter')} — ${human(car.filters.oil.interval)} <span class="toggle-icon">+</span>
+          <div id="oil-filter" class="parts">
             <div class="part-item">${car.filters.oil.parts.join(', ')}</div>
           </div>
         </li>
-        <li>${t('airFilter')} — ${human(car.filters.air.interval)}
-          <div class="parts">
+        <li data-toggle="air-filter">${t('airFilter')} — ${human(car.filters.air.interval)} <span class="toggle-icon">+</span>
+          <div id="air-filter" class="parts">
             <div class="part-item">${car.filters.air.parts.join(', ')}</div>
           </div>
         </li>
-        <li>${t('cabinFilter')} — ${human(car.filters.cabin.interval)}
-          <div class="parts">
+        <li data-toggle="cabin-filter">${t('cabinFilter')} — ${human(car.filters.cabin.interval)} <span class="toggle-icon">+</span>
+          <div id="cabin-filter" class="parts">
             <div class="part-item">${car.filters.cabin.parts.join(', ')}</div>
           </div>
         </li>
+        ${car.filters.fuel ? `<li data-toggle="fuel-filter">${t('fuelFilter')} — ${human(car.filters.fuel.interval)} <span class="toggle-icon">+</span>
+          <div id="fuel-filter" class="parts">
+            <div class="part-item">${car.filters.fuel.parts.join(', ')}</div>
+          </div>
+        </li>` : ''}
       </ul>
+    </div>
+
+    <div class="card">
+      <h3 ${car.sparkPlugs ? 'data-toggle="spark"' : ''}>${t('sparkPlugs')} ${car.sparkPlugs ? '<span class="toggle-icon">+</span>' : ''}</h3>
+      <p>${car.sparkPlugs ? `${t('replaceAt')} ${human(car.sparkPlugs.interval)}` : t('noData')}</p>
+      ${car.sparkPlugs ? `<div id="spark" class="parts">
+        <div class="part-item">${car.sparkPlugs.parts.join(', ')}</div>
+      </div>` : ''}
     </div>
 
     <div class="card">
@@ -190,20 +203,12 @@ function renderReport(carKey, mileage) {
         <div class="part-item">${car.brakePads.rear.parts.join(', ')}</div>
       </div>
     </div>
-
-    <div class="card">
-      <h3>${t('sparkPlugs')}</h3>
-      <p>${t('replaceAt')} ${human(car.sparkPlugs.interval)}</p>
-      <div class="parts">
-        <div class="part-item">${car.sparkPlugs.parts.join(', ')}</div>
-      </div>
-    </div>
   `;
 
   document.getElementById('result').innerHTML = html;
   document.getElementById('result').style.display = 'block';
 
-  // Подключаем toggle только для тормозов
+  // Подключаем toggle для всех элементов
   document.querySelectorAll('[data-toggle]').forEach(el => {
     el.addEventListener('click', function(e) {
       e.preventDefault();
