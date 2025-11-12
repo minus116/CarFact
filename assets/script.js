@@ -262,20 +262,59 @@ function renderReport(carKey, mileage) {
   document.getElementById('result').style.display = 'block';
   lastQuery = { carKey, mileage };
 
-  // Подключаем клики по заголовкам
-  setupPartToggles();
+  // Подключаем обработчики ПОСЛЕ вставки HTML
+  attachPartToggleListeners();
+  attachScrollEffect();
 }
 
-function setupPartToggles() {
+// ✅ РАБОТАЮЩИЙ обработчик кликов по заголовкам
+function attachPartToggleListeners() {
   document.querySelectorAll('.card h3, .card h4').forEach(header => {
-    header.addEventListener('click', () => {
-      const parts = header.nextElementSibling;
+    // Убираем предыдущие обработчики (защита от дубликатов)
+    const newHeader = header.cloneNode(true);
+    header.parentNode.replaceChild(newHeader, header);
+    
+    newHeader.addEventListener('click', () => {
+      const parts = newHeader.nextElementSibling;
       if (parts && parts.classList.contains('parts')) {
-        header.classList.toggle('show');
+        newHeader.classList.toggle('show');
         parts.classList.toggle('show');
       }
     });
   });
+}
+
+// ✅ Эффект растягивания при скролле
+function attachScrollEffect() {
+  const cards = document.querySelectorAll('.card');
+  if (!cards.length) return;
+
+  let ticking = false;
+
+  function updateSpacing() {
+    const scrollTop = window.scrollY;
+    const baseGap = 16; // базовый отступ в px
+    const maxExtra = 24; // макс. дополнительный отступ
+
+    // Эффект: чем ниже скролл — тем больше отступы
+    const factor = Math.min(1, scrollTop / 800);
+    const dynamicGap = baseGap + factor * maxExtra;
+
+    cards.forEach(card => {
+      card.style.marginBottom = `${dynamicGap}px`;
+    });
+
+    ticking = false;
+  }
+
+  function onScroll() {
+    if (!ticking) {
+      requestAnimationFrame(updateSpacing);
+      ticking = true;
+    }
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
 }
 
 async function init() {
