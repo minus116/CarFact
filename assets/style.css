@@ -39,6 +39,8 @@ body {
   -moz-osx-font-smoothing: grayscale;
   opacity: 1;
   transition: var(--theme-transition), opacity 0.3s var(--transition-ease);
+  /* Поддержка smooth scroll */
+  scroll-behavior: smooth;
 }
 
 /* Фиксированный заголовок */
@@ -142,27 +144,15 @@ button.primary {
   display: none;
 }
 
+/* Эффект растягивания при скролле */
 .card {
   background: var(--card-bg);
   border-radius: 16px;
   padding: 1.4rem;
   margin-bottom: 1.2rem;
   border: 1px solid var(--border);
-}
-
-.card ul {
-  list-style: none;
-  padding-left: 0;
-}
-
-.card li {
-  padding: 0.4rem 0;
-  font-size: 0.95rem;
-}
-
-.small {
-  font-size: 0.85rem;
-  color: var(--light-text);
+  /* Будет меняться через JS */
+  transition: margin-bottom 0.6s cubic-bezier(0.2, 0, 0.2, 1);
 }
 
 /* Скрытые артикулы */
