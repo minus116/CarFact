@@ -39,11 +39,12 @@ body {
   -moz-osx-font-smoothing: grayscale;
   opacity: 1;
   transition: var(--theme-transition), opacity 0.3s var(--transition-ease);
-  /* Поддержка smooth scroll */
   scroll-behavior: smooth;
+  /* Критично: чтобы anchor-скролл не прятал контент под header */
+  scroll-padding-top: 80px;
 }
 
-/* Фиксированный заголовок */
+/* Фиксированный заголовок — уменьшена высота */
 header {
   position: fixed;
   top: 0;
@@ -51,7 +52,7 @@ header {
   right: 0;
   max-width: 820px;
   margin: 0 auto;
-  padding: 1.5rem 1rem;
+  padding: 1rem 1rem 0.5rem; /* уменьшено снизу до 0.5rem */
   background-color: var(--bg);
   z-index: 100;
   display: flex;
@@ -61,9 +62,9 @@ header {
   border-bottom: 1px solid var(--border);
 }
 
-/* Отступ под фиксированный заголовок */
+/* Отступ под header — ТОЧНО на 1 строку ниже подзаголовка */
 main {
-  padding-top: 90px;
+  padding-top: 64px; /* было 90px → теперь 64px */
 }
 
 .logo h1 {
@@ -71,14 +72,15 @@ main {
   font-size: 2.8rem;
   font-weight: 400;
   letter-spacing: 0.02em;
-  margin-bottom: 0.2rem;
+  margin-bottom: 0.1rem; /* уменьшено */
 }
 
 .subtitle {
   color: var(--light-text);
   font-size: 0.95rem;
   font-weight: 400;
-  margin-top: 0.4rem;
+  margin-top: 0.2rem; /* уменьшено */
+  margin-bottom: 1.2rem; /* добавлено, чтобы отодвинуть форму вниз */
 }
 
 .controls {
@@ -144,18 +146,15 @@ button.primary {
   display: none;
 }
 
-/* Эффект растягивания при скролле */
 .card {
   background: var(--card-bg);
   border-radius: 16px;
   padding: 1.4rem;
   margin-bottom: 1.2rem;
   border: 1px solid var(--border);
-  /* Будет меняться через JS */
   transition: margin-bottom 0.6s cubic-bezier(0.2, 0, 0.2, 1);
 }
 
-/* Скрытые артикулы */
 .parts {
   margin-top: 0.5rem;
   opacity: 0;
