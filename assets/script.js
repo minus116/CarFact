@@ -158,7 +158,7 @@ const translations = {
     labelVin: "VIN / Номер кузова / Модель",
     labelMileage: "Пробег (км)",
     btnSubmit: "Показать ТО",
-    nextTO: "Следующее ТО",
+    nextTO: "Ближайшее ТО в",
     recommendedByManufacturer: "рекомендуемое заводом изготовителем",
     dueIn: "через",
     km: "км",
@@ -198,7 +198,7 @@ const translations = {
     labelVin: "VIN / Body No. / Model",
     labelMileage: "Mileage (km)",
     btnSubmit: "Show Maintenance",
-    nextTO: "Next Service",
+    nextTO: "Next Service at",
     recommendedByManufacturer: "as recommended by the manufacturer",
     dueIn: "due in",
     km: "km",
@@ -287,6 +287,7 @@ function renderReport(carKey, mileage) {
   const diff = nextTO - mileage;
   const isOverdue = diff < 0;
 
+  // Логика для "сейчас"
   const nowText = diff === 0 ? t('now') : (isOverdue ? t('overdue') : t('dueIn'));
   const diffValue = diff !== 0 ? Math.abs(diff) : '';
   const diffUnit = diff !== 0 ? t('km') : '';
@@ -295,12 +296,8 @@ function renderReport(carKey, mileage) {
   
   let html = `
     <div class="card next-to-card">
-      <h2>
-        ${t('nextTO')} 
-        <span class="next-to-subtitle">${t('recommendedByManufacturer')}</span>
-      </h2>
-      <p class="next-to-value">${human(nextTO)}</p>
-      <p class="next-to-diff">${nowText} ${diffValue} ${diffUnit}</p>
+      <h2>${t('nextTO')} ${human(nextTO)}</h2>
+      <p class="next-to-diff">${diff === 0 ? t('now') : (isOverdue ? `${t('overdue')} ${diffValue} ${t('km')}` : `${t('dueIn')} ${diffValue} ${t('km')}`)}</p>
     </div>
 
     <div class="card">
@@ -425,13 +422,13 @@ function attachScrollEffect() {
   function updateSpacing() {
     const scrollTop = window.scrollY;
     if (scrollTop < 100) {
-      cards.forEach(card => card.style.marginBottom = '12px');
+      cards.forEach(card => card.style.marginBottom = '10px');
       ticking = false;
       return;
     }
 
-    const baseGap = 12;
-    const maxExtra = 16;
+    const baseGap = 10;
+    const maxExtra = 14;
     const factor = Math.min(1, (scrollTop - 100) / 700);
     const dynamicGap = baseGap + factor * maxExtra;
 
