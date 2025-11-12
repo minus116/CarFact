@@ -1,4 +1,3 @@
-// === ДАННЫЕ ===
 const carsData = {
   "prius 2021": {
     name: { ru: "Toyota Prius (2021)", en: "Toyota Prius (2021)" },
@@ -28,7 +27,6 @@ const carsData = {
 const translations = {
   ru: {
     title: "CarFact.",
-    subtitle: "Все о тех. обслуживании вашего авто.",
     labelVin: "VIN / Номер кузова / Модель",
     labelMileage: "Пробег (км)",
     btnSubmit: "Показать ТО",
@@ -63,7 +61,6 @@ const translations = {
   },
   en: {
     title: "CarFact.",
-    subtitle: "Everything about your car’s maintenance.",
     labelVin: "VIN / Body No. / Model",
     labelMileage: "Mileage (km)",
     btnSubmit: "Show Maintenance",
@@ -100,9 +97,9 @@ const translations = {
 
 let currentLang = 'ru';
 let currentTheme = 'light';
-let lastQuery = { carKey: null, mileage: 0 };
 
 function t(key) { return translations[currentLang][key] || key; }
+
 function human(km) {
   const k = Math.floor(km / 1000);
   return currentLang === 'ru' ? `${k} тыс. ${t('km')}` : `${k}k ${t('km')}`;
@@ -113,7 +110,6 @@ function setLanguage(lang) {
   document.documentElement.lang = lang;
   document.getElementById('langToggle').textContent = lang === 'ru' ? 'RU' : 'EN';
   updateUITexts();
-  if (lastQuery.carKey) renderReport(lastQuery.carKey, lastQuery.mileage);
 }
 
 function setTheme(theme) {
@@ -121,13 +117,10 @@ function setTheme(theme) {
   currentTheme = theme;
   document.documentElement.setAttribute('data-theme', theme);
   document.getElementById('themeIcon').src = theme === 'dark' ? 'icons/moon.svg' : 'icons/sun.svg';
-  const meta = document.querySelector('meta[name="theme-color"]');
-  if (meta) meta.setAttribute('content', theme === 'dark' ? '#000000' : '#ffffff');
 }
 
 function updateUITexts() {
   document.getElementById('pageTitle').textContent = t('title');
-  document.getElementById('pageSubtitle').textContent = t('subtitle');
   document.getElementById('labelVin').textContent = t('labelVin');
   document.getElementById('labelMileage').textContent = t('labelMileage');
   document.getElementById('submitBtn').textContent = t('btnSubmit');
@@ -155,80 +148,116 @@ function renderReport(carKey, mileage) {
     </div>
 
     <div class="card">
-      <h3 data-toggle="oil">${t('oil')} <span class="toggle-icon">+</span></h3>
+      <h3>${t('oil')}</h3>
       <p>${car.oil.type} — ${t('every')} ${human(car.oil.every)}</p>
-      <div id="oil" class="parts">
-        <p class="small">${car.oil.brands.join(', ')}</p>
+      <div class="parts">
+        <div class="part-item">${car.oil.brands.join(', ')}</div>
       </div>
     </div>
 
     <div class="card">
-      <h3 data-toggle="filters">${t('filters')} <span class="toggle-icon">+</span></h3>
+      <h3>${t('filters')}</h3>
       <ul>
-        <li>${t('oilFilter')} — ${t('at')} ${human(car.filters.oil.interval)}</li>
-        <li>${t('airFilter')} — ${t('at')} ${human(car.filters.air.interval)}</li>
-        <li>${t('cabinFilter')} — ${t('at')} ${human(car.filters.cabin.interval)}</li>
-        ${car.filters.fuel ? `<li>${t('fuelFilter')} — ${t('at')} ${human(car.filters.fuel.interval)}</li>` : ''}
+        <li>${t('oilFilter')} — ${human(car.filters.oil.interval)}
+          <div class="parts">
+            <div class="part-item">${car.filters.oil.parts.join(', ')}</div>
+          </div>
+        </li>
+        <li>${t('airFilter')} — ${human(car.filters.air.interval)}
+          <div class="parts">
+            <div class="part-item">${car.filters.air.parts.join(', ')}</div>
+          </div>
+        </li>
+        <li>${t('cabinFilter')} — ${human(car.filters.cabin.interval)}
+          <div class="parts">
+            <div class="part-item">${car.filters.cabin.parts.join(', ')}</div>
+          </div>
+        </li>
       </ul>
-      <div id="filters" class="parts">
-        <ul>
-          <li><span class="small">${car.filters.oil.parts.join(', ')}</span></li>
-          <li><span class="small">${car.filters.air.parts.join(', ')}</span></li>
-          <li><span class="small">${car.filters.cabin.parts.join(', ')}</span></li>
-          ${car.filters.fuel ? `<li><span class="small">${car.filters.fuel.parts.join(', ')}</span></li>` : ''}
-        </ul>
-      </div>
     </div>
 
     <div class="card">
-      <h3 data-toggle="brakes">${t('brakes')} <span class="toggle-icon">+</span></h3>
+      <h3>${t('brakes')}</h3>
       <h4 data-toggle="brakes-front">${t('brakeFront')} <span class="toggle-icon">+</span></h4>
       <p>${t('replaceAt')} ${human(car.brakePads.front.interval)}</p>
       <div id="brakes-front" class="parts">
-        <p class="small">${car.brakePads.front.parts.join(', ')}</p>
+        <div class="part-item">${car.brakePads.front.parts.join(', ')}</div>
       </div>
       
       <h4 data-toggle="brakes-rear">${t('brakeRear')} <span class="toggle-icon">+</span></h4>
       <p>${t('replaceAt')} ${human(car.brakePads.rear.interval)}</p>
       <div id="brakes-rear" class="parts">
-        <p class="small">${car.brakePads.rear.parts.join(', ')}</p>
+        <div class="part-item">${car.brakePads.rear.parts.join(', ')}</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>${t('sparkPlugs')}</h3>
+      <p>${t('replaceAt')} ${human(car.sparkPlugs.interval)}</p>
+      <div class="parts">
+        <div class="part-item">${car.sparkPlugs.parts.join(', ')}</div>
       </div>
     </div>
   `;
 
-  if (car.sparkPlugs) {
-    html += `
-      <div class="card">
-        <h3 data-toggle="spark">${t('sparkPlugs')} <span class="toggle-icon">+</span></h3>
-        <p>${t('replaceAt')} ${human(car.sparkPlugs.interval)}</p>
-        <div id="spark" class="parts">
-          <p class="small">${car.sparkPlugs.parts.join(', ')}</p>
-        </div>
-      </div>
-    `;
-  }
-
   document.getElementById('result').innerHTML = html;
   document.getElementById('result').style.display = 'block';
-  lastQuery = { carKey, mileage };
 
-  // Подключаем обработчики toggle
+  // Подключаем toggle только для тормозов
   document.querySelectorAll('[data-toggle]').forEach(el => {
     el.addEventListener('click', function(e) {
       e.preventDefault();
       const targetId = this.getAttribute('data-toggle');
       const target = document.getElementById(targetId);
       const icon = this.querySelector('.toggle-icon');
-      
       if (target && icon) {
         target.classList.toggle('show');
         icon.textContent = target.classList.contains('show') ? '−' : '+';
       }
     });
   });
+
+  // Восстанавливаем анимацию растягивания
+  attachScrollEffect();
 }
 
-// === ИНИЦИАЛИЗАЦИЯ ===
+function attachScrollEffect() {
+  const cards = document.querySelectorAll('.card');
+  if (!cards.length) return;
+
+  let ticking = false;
+
+  function updateSpacing() {
+    const scrollTop = window.scrollY;
+    if (scrollTop < 100) {
+      cards.forEach(card => card.style.marginBottom = '16px');
+      ticking = false;
+      return;
+    }
+
+    const baseGap = 16;
+    const maxExtra = 24;
+    const factor = Math.min(1, (scrollTop - 100) / 700);
+    const dynamicGap = baseGap + factor * maxExtra;
+
+    cards.forEach(card => {
+      card.style.marginBottom = `${dynamicGap}px`;
+    });
+
+    ticking = false;
+  }
+
+  function onScroll() {
+    if (!ticking) {
+      requestAnimationFrame(updateSpacing);
+      ticking = true;
+    }
+  }
+
+  window.removeEventListener('scroll', onScroll);
+  window.addEventListener('scroll', onScroll, { passive: true });
+}
+
 function init() {
   setTheme(currentTheme);
   setLanguage(currentLang);
