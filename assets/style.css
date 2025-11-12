@@ -199,11 +199,18 @@ button.primary {
   align-items: center;
 }
 
-.toggle-icon {
-  font-size: 1.2rem;
-  font-weight: 300;
-  width: 1.2em;
-  text-align: right;
+/* Стили для кругляшка */
+.toggle-circle {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background-color: var(--light-text); /* темно-серый */
+  transition: background-color 0.2s ease;
+}
+
+.toggle-circle.open {
+  background-color: var(--text); /* светло-серый */
 }
 
 /* Единый стиль для всех выпадающих блоков */
