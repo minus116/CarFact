@@ -206,9 +206,21 @@ button.primary {
   text-align: right;
 }
 
-.part-item {
+/* Единый стиль для всех выпадающих блоков */
+.dropdown-content,
+.part-item,
+.region-item {
   font-size: 0.85rem;
   color: var(--light-text);
   margin-top: 0.3rem;
   opacity: 0.8;
+}
+
+.regions-list {
+  margin-top: 0.8rem;
+  padding-left: 1rem;
+}
+
+.region-item {
+  margin-top: 0.2rem;
 }
