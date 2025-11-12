@@ -15,10 +15,139 @@ const carsData = {
       rear: { interval: 60000, parts: ["Toyota 04466-0K060", "TRW GDB3470"] }
     },
     timing: { type: "chain", check: 100000, replace: 200000 },
-    tires: { size: "195/65 R15", pressure: { front: "2.3", rear: "2.2" } },
+    tires: { 
+      size: "195/65 R15", 
+      pressure: { front: "2.3", rear: "2.2" },
+      regions: {
+        japan: ["Bridgestone", "Yokohama", "Toyo"],
+        china: ["Triangle", "Sailun", "Double Coin"],
+        korea: ["Kumho", "Nexen", "Hankook"],
+        europe: ["Michelin", "Continental", "Goodyear"]
+      }
+    },
     notes: {
       ru: ["HV-батарея: проверка каждые 40 000 км"],
       en: ["HV battery: inspect every 40,000 km"]
+    }
+  },
+  "fit 2020": {
+    name: { ru: "Honda Fit (2020)", en: "Honda Fit (2020)" },
+    intervals: 10000,
+    oil: { every: 10000, type: "0W-20", parts: ["Honda 15400-PLM-A02", "Mann W 701/61"] },
+    filters: {
+      oil: { interval: 10000, parts: ["Honda 15400-PLM-A02", "Mann W 701/61"] },
+      air: { interval: 20000, parts: ["Honda 17220-PLM-A01", "Mann C 25 016"] },
+      cabin: { interval: 20000, parts: ["Honda 17641-PLM-A01", "Mann CU 2750"] }
+    },
+    sparkPlugs: { interval: 100000, parts: ["NGK SILZKR7B11", "Denso SIKR8B11"] },
+    brakePads: {
+      front: { interval: 35000, parts: ["Honda 45022-TG5-A01", "TRW GDB2278"] },
+      rear: { interval: 50000, parts: ["Honda 43022-TG5-A01", "Textar 2400301"] }
+    },
+    timing: { type: "belt", check: 60000, replace: 120000 },
+    tires: { 
+      size: "185/60 R15", 
+      pressure: { front: "2.3", rear: "2.2" },
+      regions: {
+        japan: ["Bridgestone", "Yokohama", "Falken"],
+        china: ["Linglong", "Giti", "Westlake"],
+        korea: ["Kumho", "Nexen", "Hankook"],
+        europe: ["Michelin", "Continental", "Pirelli"]
+      }
+    },
+    notes: {
+      ru: ["CVT-жидкость: замена через 100 000 км"],
+      en: ["CVT fluid: replace at 100,000 km"]
+    }
+  },
+  "escudo 2015": {
+    name: { ru: "Suzuki Escudo (2015)", en: "Suzuki Vitara (2015)" },
+    intervals: 15000,
+    oil: { every: 15000, type: "5W-30", parts: ["Suzuki 16510-85G00", "Mann W 9004"] },
+    filters: {
+      oil: { interval: 15000, parts: ["Suzuki 16510-85G00", "Mann W 9004"] },
+      air: { interval: 30000, parts: ["Suzuki 13780-87J00", "Mann C 35 005"] },
+      cabin: { interval: 30000, parts: ["Suzuki 15530-87J00", "Mann CU 2555"] }
+    },
+    sparkPlugs: { interval: 60000, parts: ["NGK LKAR8AIX-9", "Denso K20HR-U9"] },
+    brakePads: {
+      front: { interval: 45000, parts: ["Suzuki 52021-85G00", "TRW GDB4418"] },
+      rear: { interval: 65000, parts: ["Suzuki 52022-85G00", "Textar 2400401"] }
+    },
+    timing: { type: "belt", check: 60000, replace: 100000 },
+    tires: { 
+      size: "215/60 R17", 
+      pressure: { front: "2.3", rear: "2.3" },
+      regions: {
+        japan: ["Bridgestone", "Toyo", "Falken"],
+        china: ["Triangle", "Aeolus", "Giti"],
+        korea: ["Kumho", "Nexen", "Hankook"],
+        europe: ["Michelin", "Continental", "Nokian"]
+      }
+    },
+    notes: {
+      ru: ["Полный привод: проверка раздатки каждые 30 000 км"],
+      en: ["4WD: inspect transfer case every 30,000 km"]
+    }
+  },
+  "xv 2019": {
+    name: { ru: "Subaru XV (2019)", en: "Subaru XV (2019)" },
+    intervals: 10000,
+    oil: { every: 10000, type: "0W-20", parts: ["Subaru 15208AA160", "Mann W 701/60"] },
+    filters: {
+      oil: { interval: 10000, parts: ["Subaru 15208AA160", "Mann W 701/60"] },
+      air: { interval: 20000, parts: ["Subaru 16546AA060", "Mann C 35 003"] },
+      cabin: { interval: 20000, parts: ["Subaru H7110AC000", "Mann CU 2964"] }
+    },
+    sparkPlugs: { interval: 100000, parts: ["NGK SILZFR6A11", "Denso SIKR8B11"] },
+    brakePads: {
+      front: { interval: 40000, parts: ["Subaru 26295FG000", "TRW GDB3788"] },
+      rear: { interval: 55000, parts: ["Subaru 26625FG000", "Textar 2400501"] }
+    },
+    timing: { type: "chain", check: 100000 },
+    tires: { 
+      size: "225/55 R18", 
+      pressure: { front: "2.4", rear: "2.3" },
+      regions: {
+        japan: ["Yokohama", "Bridgestone", "Falken"],
+        china: ["Sailun", "Linglong", "Westlake"],
+        korea: ["Kumho", "Nexen", "Hankook"],
+        europe: ["Michelin", "Continental", "Pirelli"]
+      }
+    },
+    notes: {
+      ru: ["Проверка подвески каждые 20 000 км"],
+      en: ["Inspect suspension every 20,000 km"]
+    }
+  },
+  "c200 2019": {
+    name: { ru: "Mercedes C200 (2019)", en: "Mercedes-Benz C200 (2019)" },
+    intervals: 15000,
+    oil: { every: 15000, type: "0W-30 (MB 229.52)", parts: ["Mercedes A 001 184 66 02", "Mann W 913/2"] },
+    filters: {
+      oil: { interval: 15000, parts: ["Mercedes A 001 184 66 02", "Mann W 913/2"] },
+      air: { interval: 30000, parts: ["Mercedes A 000 094 20 04", "Mann C 36 010"] },
+      cabin: { interval: 30000, parts: ["Mercedes A 000 830 62 05", "Mann CU 3238"] }
+    },
+    sparkPlugs: { interval: 60000, parts: ["Bosch FQR8LE2+", "NGK SILZKR7B11"] },
+    brakePads: {
+      front: { interval: 50000, parts: ["Mercedes A 006 420 76 20", "Bosch 0 986 AB4 274"] },
+      rear: { interval: 70000, parts: ["Mercedes A 006 420 25 20", "TRW GDB4420"] }
+    },
+    timing: { type: "chain", check: 120000 },
+    tires: { 
+      size: "225/50 R17 (F), 245/45 R17 (R)", 
+      pressure: { front: "2.3", rear: "2.4" },
+      regions: {
+        japan: ["Bridgestone", "Yokohama", "Toyo"],
+        china: ["Giti", "Linglong", "Aeolus"],
+        korea: ["Kumho", "Nexen", "Hankook"],
+        europe: ["Michelin", "Continental", "Pirelli"]
+      }
+    },
+    notes: {
+      ru: ["Охлаждающая жидкость: замена 150 000 км"],
+      en: ["Coolant: replace at 150,000 km"]
     }
   }
 };
@@ -57,7 +186,12 @@ const translations = {
     inspectAt: "Проверка —",
     replaceAt: "Замена —",
     every: "каждые",
-    at: "на"
+    at: "на",
+    japan: "Япония",
+    china: "Китай",
+    korea: "Корея",
+    europe: "Европа",
+    tireBrands: "Марки резины"
   },
   en: {
     title: "CarFact.",
@@ -92,7 +226,12 @@ const translations = {
     inspectAt: "Inspect at",
     replaceAt: "Replace at",
     every: "every",
-    at: "at"
+    at: "at",
+    japan: "Japan",
+    china: "China",
+    korea: "Korea",
+    europe: "Europe",
+    tireBrands: "Tire Brands"
   }
 };
 
@@ -111,6 +250,10 @@ function setLanguage(lang) {
   document.documentElement.lang = lang;
   document.getElementById('langToggle').textContent = lang === 'ru' ? 'RU' : 'EN';
   updateUITexts();
+  // Перерисовываем отчёт при смене языка
+  if (lastQuery.carKey) {
+    renderReport(lastQuery.carKey, lastQuery.mileage);
+  }
 }
 
 function setTheme(theme) {
@@ -131,8 +274,15 @@ function updateUITexts() {
 function findCar(query) {
   const q = query.toLowerCase();
   if (q.includes('prius') && q.includes('2021')) return 'prius 2021';
+  if (q.includes('fit') && q.includes('2020')) return 'fit 2020';
+  if ((q.includes('escudo') || q.includes('vitara')) && q.includes('2015')) return 'escudo 2015';
+  if (q.includes('xv') && q.includes('2019')) return 'xv 2019';
+  if (q.includes('c200') && q.includes('2019')) return 'c200 2019';
   return null;
 }
+
+// Глобальное состояние для последнего запроса
+let lastQuery = { carKey: null, mileage: 0 };
 
 function renderReport(carKey, mileage) {
   const car = carsData[carKey];
@@ -145,6 +295,9 @@ function renderReport(carKey, mileage) {
   const diffValue = diff !== 0 ? Math.abs(diff) : '';
   const diffUnit = diff !== 0 ? t('km') : '';
 
+  // Марки резины по регионам
+  const tireRegions = car.tires.regions;
+  
   let html = `
     <div class="card next-to-card">
       <h2>
@@ -164,7 +317,7 @@ function renderReport(carKey, mileage) {
     </div>
 
     <div class="card">
-      <h3 ${car.filters.fuel ? 'data-toggle="filters"' : ''}>${t('filters')} ${car.filters.fuel ? '<span class="toggle-icon">+</span>' : ''}</h3>
+      <h3 data-toggle="filters">${t('filters')} <span class="toggle-icon">+</span></h3>
       <ul>
         <li data-toggle="oil-filter">${t('oilFilter')} — ${human(car.filters.oil.interval)} <span class="toggle-icon">+</span>
           <div id="oil-filter" class="parts">
@@ -190,11 +343,11 @@ function renderReport(carKey, mileage) {
     </div>
 
     <div class="card">
-      <h3 ${car.sparkPlugs ? 'data-toggle="spark"' : ''}>${t('sparkPlugs')} ${car.sparkPlugs ? '<span class="toggle-icon">+</span>' : ''}</h3>
-      <p>${car.sparkPlugs ? `${t('replaceAt')} ${human(car.sparkPlugs.interval)}` : t('noData')}</p>
-      ${car.sparkPlugs ? `<div id="spark" class="parts">
+      <h3 data-toggle="spark">${t('sparkPlugs')} <span class="toggle-icon">+</span></h3>
+      <p>${t('replaceAt')} ${human(car.sparkPlugs.interval)}</p>
+      <div id="spark" class="parts">
         <div class="part-item">${car.sparkPlugs.parts.join(', ')}</div>
-      </div>` : ''}
+      </div>
     </div>
 
     <div class="card">
@@ -211,10 +364,28 @@ function renderReport(carKey, mileage) {
         <div class="part-item">${car.brakePads.rear.parts.join(', ')}</div>
       </div>
     </div>
+
+    <div class="card">
+      <h3 data-toggle="wheels">${t('wheels')} <span class="toggle-icon">+</span></h3>
+      <ul>
+        <li>${t('tireSize')}: <b>${car.tires.size}</b></li>
+        <li>${t('pressure')}: ${t('front')} — <b>${car.tires.pressure.front}</b>, ${t('rear')} — <b>${car.tires.pressure.rear}</b></li>
+      </ul>
+      <div id="wheels" class="parts">
+        <h4>${t('tireBrands')}</h4>
+        <div class="regions-list">
+          <div class="region-item"><strong>${t('japan')}:</strong> ${tireRegions.japan.join(', ')}</div>
+          <div class="region-item"><strong>${t('china')}:</strong> ${tireRegions.china.join(', ')}</div>
+          <div class="region-item"><strong>${t('korea')}:</strong> ${tireRegions.korea.join(', ')}</div>
+          <div class="region-item"><strong>${t('europe')}:</strong> ${tireRegions.europe.join(', ')}</div>
+        </div>
+      </div>
+    </div>
   `;
 
   document.getElementById('result').innerHTML = html;
   document.getElementById('result').style.display = 'block';
+  lastQuery = { carKey, mileage };
 
   // Подключаем toggle для всех элементов
   document.querySelectorAll('[data-toggle]').forEach(el => {
@@ -294,10 +465,11 @@ function init() {
       renderReport(carKey, mileage);
     } else {
       const msg = currentLang === 'ru' 
-        ? '<h2>Авто не найдено</h2><p>Попробуйте: Prius 2021</p>' 
-        : '<h2>Not found</h2><p>Try: Prius 2021</p>';
+        ? '<h2>Авто не найдено</h2><p>Поддерживаемые: Prius 2021, Fit 2020, Escudo 2015, XV 2019, C200 2019</p>' 
+        : '<h2>Not found</h2><p>Supported: Prius 2021, Fit 2020, Escudo 2015, XV 2019, C200 2019</p>';
       document.getElementById('result').innerHTML = `<div class="card">${msg}</div>`;
       document.getElementById('result').style.display = 'block';
+      lastQuery = { carKey: null, mileage: 0 };
     }
   });
 
