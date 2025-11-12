@@ -5,7 +5,7 @@ let carsData = {};
 
 const translations = {
   ru: {
-    title: "CarFact",
+    title: "CarFact.",
     subtitle: "Введите VIN или номер кузова — узнайте, что менять и какие запчасти использовать",
     labelVin: "VIN / Номер кузова / Модель",
     labelMileage: "Пробег (км)",
@@ -40,7 +40,7 @@ const translations = {
     at: "на"
   },
   en: {
-    title: "CarFact",
+    title: "CarFact.",
     subtitle: "Enter VIN or body number — see what to service and which parts to use",
     labelVin: "VIN / Body No. / Model",
     labelMileage: "Mileage (km)",
@@ -166,45 +166,82 @@ function renderReport(carKey, mileage) {
     </div>
   `;
 
-  html += `<div class="card"><h3>${t('oil')}</h3><p>${car.oil.type} — ${t('every')} ${human(car.oil.every)}</p><p class="small">${car.oil.brands.join(', ')}</p></div>`;
-
-  html += `<div class="card"><h3>${t('filters')}</h3><ul>`;
-  html += `<li>${t('oilFilter')} — ${t('at')} ${human(car.filters.oil.interval)}<br><span class="small">${car.filters.oil.parts.join(', ')}</span></li>`;
-  html += `<li>${t('airFilter')} — ${t('at')} ${human(car.filters.air.interval)}<br><span class="small">${car.filters.air.parts.join(', ')}</span></li>`;
-  html += `<li>${t('cabinFilter')} — ${t('at')} ${human(car.filters.cabin.interval)}<br><span class="small">${car.filters.cabin.parts.join(', ')}</span></li>`;
-  if (car.filters.fuel) {
-    html += `<li>${t('fuelFilter')} — ${t('at')} ${human(car.filters.fuel.interval)}<br><span class="small">${car.filters.fuel.parts.join(', ')}</span></li>`;
-  }
-  html += `</ul></div>`;
-
+  // Масло
   html += `
-    <div class="card">
-      <h3>${t('brakes')}</h3>
-      <h4>${t('brakeFront')}</h4>
-      <p>${t('replaceAt')} ${human(car.brakePads.front.interval)}</p>
-      <p class="small">${car.brakePads.front.parts.join(', ')}</p>
-      <h4>${t('brakeRear')}</h4>
-      <p>${t('replaceAt')} ${human(car.brakePads.rear.interval)}</p>
-      <p class="small">${car.brakePads.rear.parts.join(', ')}</p>
+    <div class="card" data-block="oil">
+      <h3>${t('oil')}</h3>
+      <p>${car.oil.type} — ${t('every')} ${human(car.oil.every)}</p>
+      <div class="parts">
+        <p class="small">${car.oil.brands.join(', ')}</p>
+      </div>
     </div>
   `;
 
+  // Фильтры
+  html += `<div class="card" data-block="filters"><h3>${t('filters')}</h3><ul>`;
+  html += `<li>${t('oilFilter')} — ${t('at')} ${human(car.filters.oil.interval)}</li>`;
+  html += `<li>${t('airFilter')} — ${t('at')} ${human(car.filters.air.interval)}</li>`;
+  html += `<li>${t('cabinFilter')} — ${t('at')} ${human(car.filters.cabin.interval)}</li>`;
+  if (car.filters.fuel) {
+    html += `<li>${t('fuelFilter')} — ${t('at')} ${human(car.filters.fuel.interval)}</li>`;
+  }
+  html += `</ul><div class="parts"><ul>`;
+  html += `<li><span class="small">${car.filters.oil.parts.join(', ')}</span></li>`;
+  html += `<li><span class="small">${car.filters.air.parts.join(', ')}</span></li>`;
+  html += `<li><span class="small">${car.filters.cabin.parts.join(', ')}</span></li>`;
+  if (car.filters.fuel) {
+    html += `<li><span class="small">${car.filters.fuel.parts.join(', ')}</span></li>`;
+  }
+  html += `</ul></div></div>`;
+
+  // Тормоза
+  html += `
+    <div class="card" data-block="brakes">
+      <h3>${t('brakes')}</h3>
+      <h4>${t('brakeFront')}</h4>
+      <p>${t('replaceAt')} ${human(car.brakePads.front.interval)}</p>
+      <div class="parts">
+        <p class="small">${car.brakePads.front.parts.join(', ')}</p>
+      </div>
+      
+      <h4>${t('brakeRear')}</h4>
+      <p>${t('replaceAt')} ${human(car.brakePads.rear.interval)}</p>
+      <div class="parts">
+        <p class="small">${car.brakePads.rear.parts.join(', ')}</p>
+      </div>
+    </div>
+  `;
+
+  // Свечи
   if (car.sparkPlugs) {
-    html += `<div class="card"><h3>${t('sparkPlugs')}</h3><p>${t('replaceAt')} ${human(car.sparkPlugs.interval)}</p><p class="small">${car.sparkPlugs.parts.join(', ')}</p></div>`;
+    html += `
+      <div class="card" data-block="sparkPlugs">
+        <h3>${t('sparkPlugs')}</h3>
+        <p>${t('replaceAt')} ${human(car.sparkPlugs.interval)}</p>
+        <div class="parts">
+          <p class="small">${car.sparkPlugs.parts.join(', ')}</p>
+        </div>
+      </div>
+    `;
   }
 
+  // ГРМ
   if (car.timing) {
     const type = car.timing.type === "chain" ? t('chain') : t('belt');
-    html += `<div class="card"><h3>${t('timing')} (${type})</h3><p>${t('inspectAt')} ${human(car.timing.check)}`;
+    html += `
+      <div class="card" data-block="timing">
+        <h3>${t('timing')} (${type})</h3>
+        <p>${t('inspectAt')} ${human(car.timing.check)}`;
     if (car.timing.replace) {
       html += `<br>${t('replaceAt')} ${human(car.timing.replace)}`;
     }
     html += `</p></div>`;
   }
 
+  // Колёса
   if (car.tires) {
     html += `
-      <div class="card">
+      <div class="card" data-block="wheels">
         <h3>${t('wheels')}</h3>
         <ul>
           <li>${t('tireSize')}: <b>${car.tires.size}</b></li>
@@ -214,6 +251,7 @@ function renderReport(carKey, mileage) {
     `;
   }
 
+  // Рекомендации
   if (car.notes && car.notes[currentLang] && car.notes[currentLang].length) {
     html += `<div class="card"><h3>${t('recommendations')}</h3><ul>`;
     car.notes[currentLang].forEach(n => html += `<li>${n}</li>`);
@@ -223,6 +261,21 @@ function renderReport(carKey, mileage) {
   document.getElementById('result').innerHTML = html;
   document.getElementById('result').style.display = 'block';
   lastQuery = { carKey, mileage };
+
+  // Подключаем клики по заголовкам
+  setupPartToggles();
+}
+
+function setupPartToggles() {
+  document.querySelectorAll('.card h3, .card h4').forEach(header => {
+    header.addEventListener('click', () => {
+      const parts = header.nextElementSibling;
+      if (parts && parts.classList.contains('parts')) {
+        header.classList.toggle('show');
+        parts.classList.toggle('show');
+      }
+    });
+  });
 }
 
 async function init() {
