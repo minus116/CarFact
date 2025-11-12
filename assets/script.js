@@ -21,7 +21,6 @@ const carsData = {
       en: ["HV battery: inspect every 40,000 km"]
     }
   }
-  // ... остальные авто можно добавить по аналогии
 };
 
 const translations = {
@@ -35,6 +34,7 @@ const translations = {
     dueIn: "через",
     km: "км",
     overdue: "просрочено на",
+    now: "сейчас",
     oil: "Моторное масло",
     filters: "Фильтры",
     oilFilter: "Масляный",
@@ -69,6 +69,7 @@ const translations = {
     dueIn: "due in",
     km: "km",
     overdue: "overdue by",
+    now: "now",
     oil: "Engine Oil",
     filters: "Filters",
     oilFilter: "Oil",
@@ -139,12 +140,19 @@ function renderReport(carKey, mileage) {
   const diff = nextTO - mileage;
   const isOverdue = diff < 0;
 
+  // Специальная логика для "сейчас"
+  const nowText = diff === 0 ? t('now') : (isOverdue ? t('overdue') : t('dueIn'));
+  const diffValue = diff !== 0 ? Math.abs(diff) : '';
+  const diffUnit = diff !== 0 ? t('km') : '';
+
   let html = `
-    <div class="card">
-      <h2>${t('nextTO')}</h2>
-      <p class="next-to-subtitle">${t('recommendedByManufacturer')}</p>
+    <div class="card next-to-card">
+      <h2>
+        ${t('nextTO')} 
+        <span class="next-to-subtitle">${t('recommendedByManufacturer')}</span>
+      </h2>
       <p class="next-to-value">${human(nextTO)}</p>
-      <p class="next-to-diff">${isOverdue ? t('overdue') : t('dueIn')} ${Math.abs(diff)} ${t('km')}</p>
+      <p class="next-to-diff">${nowText} ${diffValue} ${diffUnit}</p>
     </div>
 
     <div class="card">
