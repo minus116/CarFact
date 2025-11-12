@@ -1,4 +1,4 @@
-// === ДАННЫЕ АВТО ===
+// === ДАННЫЕ ===
 const carsData = {
   "prius 2021": {
     name: { ru: "Toyota Prius (2021)", en: "Toyota Prius (2021)" },
@@ -21,94 +21,10 @@ const carsData = {
       ru: ["HV-батарея: проверка каждые 40 000 км"],
       en: ["HV battery: inspect every 40,000 km"]
     }
-  },
-  "fit 2020": {
-    name: { ru: "Honda Fit (2020)", en: "Honda Fit (2020)" },
-    intervals: 10000,
-    oil: { every: 10000, type: "0W-20", brands: ["Honda 0W-20"] },
-    filters: {
-      oil: { interval: 10000, parts: ["Honda 15400-PLM-A02", "Mann W 701/61"] },
-      air: { interval: 20000, parts: ["Honda 17220-PLM-A01"] },
-      cabin: { interval: 20000, parts: ["Honda 17641-PLM-A01"] }
-    },
-    sparkPlugs: { interval: 100000, parts: ["NGK SILZKR7B11"] },
-    brakePads: {
-      front: { interval: 35000, parts: ["Honda 45022-TG5-A01", "Akebono ACT1108"] },
-      rear: { interval: 50000, parts: ["Honda 43022-TG5-A01", "TRW GDB2278"] }
-    },
-    timing: { type: "belt", check: 60000, replace: 120000 },
-    tires: { size: "185/60 R15", pressure: { front: "2.3", rear: "2.2" } },
-    notes: {
-      ru: ["CVT-жидкость: замена через 100 000 км"],
-      en: ["CVT fluid: replace at 100,000 km"]
-    }
-  },
-  "escudo 2015": {
-    name: { ru: "Suzuki Escudo (2015)", en: "Suzuki Vitara (2015)" },
-    intervals: 15000,
-    oil: { every: 15000, type: "5W-30", brands: ["Suzuki 5W-30", "Shell Helix Ultra"] },
-    filters: {
-      oil: { interval: 15000, parts: ["Suzuki 16510-85G00", "Mann W 9004"] },
-      air: { interval: 30000, parts: ["Suzuki 13780-87J00"] },
-      cabin: { interval: 30000, parts: ["Suzuki 15530-87J00"] }
-    },
-    sparkPlugs: { interval: 60000, parts: ["NGK LKAR8AIX-9"] },
-    brakePads: {
-      front: { interval: 45000, parts: ["Suzuki 52021-85G00", "TRW GDB4418"] },
-      rear: { interval: 65000, parts: ["Suzuki 52022-85G00"] }
-    },
-    timing: { type: "belt", check: 60000, replace: 100000 },
-    tires: { size: "215/60 R17", pressure: { front: "2.3", rear: "2.3" } },
-    notes: {
-      ru: ["Полный привод: проверка раздатки каждые 30 000 км"],
-      en: ["4WD: inspect transfer case every 30,000 km"]
-    }
-  },
-  "xv 2019": {
-    name: { ru: "Subaru XV (2019)", en: "Subaru XV (2019)" },
-    intervals: 10000,
-    oil: { every: 10000, type: "0W-20", brands: ["Subaru 0W-20", "Idemitsu Zepro"] },
-    filters: {
-      oil: { interval: 10000, parts: ["Subaru 15208AA160", "Mann W 701/60"] },
-      air: { interval: 20000, parts: ["Subaru 16546AA060"] },
-      cabin: { interval: 20000, parts: ["Subaru H7110AC000"] }
-    },
-    sparkPlugs: { interval: 100000, parts: ["NGK SILZFR6A11"] },
-    brakePads: {
-      front: { interval: 40000, parts: ["Subaru 26295FG000", "TRW GDB3788"] },
-      rear: { interval: 55000, parts: ["Subaru 26625FG000"] }
-    },
-    timing: { type: "chain", check: 100000 },
-    tires: { size: "225/55 R18", pressure: { front: "2.4", rear: "2.3" } },
-    notes: {
-      ru: ["Проверка подвески каждые 20 000 км"],
-      en: ["Inspect suspension every 20,000 km"]
-    }
-  },
-  "c200 2019": {
-    name: { ru: "Mercedes C200 (2019)", en: "Mercedes-Benz C200 (2019)" },
-    intervals: 15000,
-    oil: { every: 15000, type: "0W-30 (MB 229.52)", brands: ["Mercedes 229.52", "Mobil 1 ESP"] },
-    filters: {
-      oil: { interval: 15000, parts: ["Mercedes A 001 184 66 02", "Mann W 913/2"] },
-      air: { interval: 30000, parts: ["Mercedes A 000 094 20 04"] },
-      cabin: { interval: 30000, parts: ["Mercedes A 000 830 62 05"] }
-    },
-    sparkPlugs: { interval: 60000, parts: ["Bosch FQR8LE2+"] },
-    brakePads: {
-      front: { interval: 50000, parts: ["Mercedes A 006 420 76 20", "Bosch 0 986 AB4 274"] },
-      rear: { interval: 70000, parts: ["Mercedes A 006 420 25 20"] }
-    },
-    timing: { type: "chain", check: 120000 },
-    tires: { size: "225/50 R17 (F), 245/45 R17 (R)", pressure: { front: "2.3", rear: "2.4" } },
-    notes: {
-      ru: ["Охлаждающая жидкость: замена 150 000 км"],
-      en: ["Coolant: replace at 150,000 km"]
-    }
   }
+  // ... остальные авто можно добавить по аналогии
 };
 
-// === ЛОКАЛИЗАЦИЯ ===
 const translations = {
   ru: {
     title: "CarFact.",
@@ -182,22 +98,14 @@ const translations = {
   }
 };
 
-// === ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ ===
 let currentLang = 'ru';
 let currentTheme = 'light';
 let lastQuery = { carKey: null, mileage: 0 };
 
-// === ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ===
-function t(key) {
-  return translations[currentLang][key] || key;
-}
-
+function t(key) { return translations[currentLang][key] || key; }
 function human(km) {
   const k = Math.floor(km / 1000);
-  if (km >= 1000) {
-    return currentLang === 'ru' ? `${k} тыс. ${t('km')}` : `${k}k ${t('km')}`;
-  }
-  return `${km} ${t('km')}`;
+  return currentLang === 'ru' ? `${k} тыс. ${t('km')}` : `${k}k ${t('km')}`;
 }
 
 function setLanguage(lang) {
@@ -205,33 +113,16 @@ function setLanguage(lang) {
   document.documentElement.lang = lang;
   document.getElementById('langToggle').textContent = lang === 'ru' ? 'RU' : 'EN';
   updateUITexts();
-  if (lastQuery.carKey) {
-    renderReport(lastQuery.carKey, lastQuery.mileage);
-  }
+  if (lastQuery.carKey) renderReport(lastQuery.carKey, lastQuery.mileage);
 }
 
 function setTheme(theme) {
-  if (document.body.classList.contains('theme-switching')) return;
   if (currentTheme === theme) return;
-
-  document.body.classList.add('theme-switching');
-
-  setTimeout(() => {
-    currentTheme = theme;
-    document.documentElement.setAttribute('data-theme', theme);
-    
-    const icon = document.getElementById('themeIcon');
-    const newSrc = theme === 'dark' ? 'icons/moon.svg' : 'icons/sun.svg';
-    
-    icon.src = newSrc;
-    
-    const meta = document.querySelector('meta[name="theme-color"]');
-    if (meta) meta.setAttribute('content', theme === 'dark' ? '#000000' : '#ffffff');
-
-    setTimeout(() => {
-      document.body.classList.remove('theme-switching');
-    }, 300);
-  }, 50);
+  currentTheme = theme;
+  document.documentElement.setAttribute('data-theme', theme);
+  document.getElementById('themeIcon').src = theme === 'dark' ? 'icons/moon.svg' : 'icons/sun.svg';
+  const meta = document.querySelector('meta[name="theme-color"]');
+  if (meta) meta.setAttribute('content', theme === 'dark' ? '#000000' : '#ffffff');
 }
 
 function updateUITexts() {
@@ -245,11 +136,7 @@ function updateUITexts() {
 
 function findCar(query) {
   const q = query.toLowerCase();
-  if (q.includes('prius') && (q.includes('2021') || q.includes('21'))) return 'prius 2021';
-  if (q.includes('fit') && q.includes('2020')) return 'fit 2020';
-  if ((q.includes('escudo') || q.includes('vitara')) && q.includes('2015')) return 'escudo 2015';
-  if (q.includes('xv') && q.includes('2019')) return 'xv 2019';
-  if (q.includes('c200') && q.includes('2019')) return 'c200 2019';
+  if (q.includes('prius') && q.includes('2021')) return 'prius 2021';
   return null;
 }
 
@@ -260,54 +147,50 @@ function renderReport(carKey, mileage) {
   const isOverdue = diff < 0;
 
   let html = `
-    <div class="card" style="border-left: 4px solid var(--accent);">
+    <div class="card">
       <h2>${t('nextTO')}</h2>
       <p class="next-to-subtitle">${t('recommendedByManufacturer')}</p>
       <p class="next-to-value">${human(nextTO)}</p>
-      <p class="next-to-diff">
-        ${isOverdue ? t('overdue') : t('dueIn')} ${Math.abs(diff)} ${t('km')}
-      </p>
+      <p class="next-to-diff">${isOverdue ? t('overdue') : t('dueIn')} ${Math.abs(diff)} ${t('km')}</p>
     </div>
-  `;
 
-  html += `
     <div class="card">
-      <h3>${t('oil')}</h3>
+      <h3 data-toggle="oil">${t('oil')} <span class="toggle-icon">+</span></h3>
       <p>${car.oil.type} — ${t('every')} ${human(car.oil.every)}</p>
-      <div class="parts">
+      <div id="oil" class="parts">
         <p class="small">${car.oil.brands.join(', ')}</p>
       </div>
     </div>
-  `;
 
-  html += `<div class="card"><h3>${t('filters')}</h3><ul>`;
-  html += `<li>${t('oilFilter')} — ${t('at')} ${human(car.filters.oil.interval)}</li>`;
-  html += `<li>${t('airFilter')} — ${t('at')} ${human(car.filters.air.interval)}</li>`;
-  html += `<li>${t('cabinFilter')} — ${t('at')} ${human(car.filters.cabin.interval)}</li>`;
-  if (car.filters.fuel) {
-    html += `<li>${t('fuelFilter')} — ${t('at')} ${human(car.filters.fuel.interval)}</li>`;
-  }
-  html += `</ul><div class="parts"><ul>`;
-  html += `<li><span class="small">${car.filters.oil.parts.join(', ')}</span></li>`;
-  html += `<li><span class="small">${car.filters.air.parts.join(', ')}</span></li>`;
-  html += `<li><span class="small">${car.filters.cabin.parts.join(', ')}</span></li>`;
-  if (car.filters.fuel) {
-    html += `<li><span class="small">${car.filters.fuel.parts.join(', ')}</span></li>`;
-  }
-  html += `</ul></div></div>`;
-
-  html += `
     <div class="card">
-      <h3>${t('brakes')}</h3>
-      <h4>${t('brakeFront')}</h4>
+      <h3 data-toggle="filters">${t('filters')} <span class="toggle-icon">+</span></h3>
+      <ul>
+        <li>${t('oilFilter')} — ${t('at')} ${human(car.filters.oil.interval)}</li>
+        <li>${t('airFilter')} — ${t('at')} ${human(car.filters.air.interval)}</li>
+        <li>${t('cabinFilter')} — ${t('at')} ${human(car.filters.cabin.interval)}</li>
+        ${car.filters.fuel ? `<li>${t('fuelFilter')} — ${t('at')} ${human(car.filters.fuel.interval)}</li>` : ''}
+      </ul>
+      <div id="filters" class="parts">
+        <ul>
+          <li><span class="small">${car.filters.oil.parts.join(', ')}</span></li>
+          <li><span class="small">${car.filters.air.parts.join(', ')}</span></li>
+          <li><span class="small">${car.filters.cabin.parts.join(', ')}</span></li>
+          ${car.filters.fuel ? `<li><span class="small">${car.filters.fuel.parts.join(', ')}</span></li>` : ''}
+        </ul>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3 data-toggle="brakes">${t('brakes')} <span class="toggle-icon">+</span></h3>
+      <h4 data-toggle="brakes-front">${t('brakeFront')} <span class="toggle-icon">+</span></h4>
       <p>${t('replaceAt')} ${human(car.brakePads.front.interval)}</p>
-      <div class="parts">
+      <div id="brakes-front" class="parts">
         <p class="small">${car.brakePads.front.parts.join(', ')}</p>
       </div>
       
-      <h4>${t('brakeRear')}</h4>
+      <h4 data-toggle="brakes-rear">${t('brakeRear')} <span class="toggle-icon">+</span></h4>
       <p>${t('replaceAt')} ${human(car.brakePads.rear.interval)}</p>
-      <div class="parts">
+      <div id="brakes-rear" class="parts">
         <p class="small">${car.brakePads.rear.parts.join(', ')}</p>
       </div>
     </div>
@@ -316,103 +199,33 @@ function renderReport(carKey, mileage) {
   if (car.sparkPlugs) {
     html += `
       <div class="card">
-        <h3>${t('sparkPlugs')}</h3>
+        <h3 data-toggle="spark">${t('sparkPlugs')} <span class="toggle-icon">+</span></h3>
         <p>${t('replaceAt')} ${human(car.sparkPlugs.interval)}</p>
-        <div class="parts">
+        <div id="spark" class="parts">
           <p class="small">${car.sparkPlugs.parts.join(', ')}</p>
         </div>
       </div>
     `;
   }
 
-  if (car.timing) {
-    const type = car.timing.type === "chain" ? t('chain') : t('belt');
-    html += `
-      <div class="card">
-        <h3>${t('timing')} (${type})</h3>
-        <p>${t('inspectAt')} ${human(car.timing.check)}`;
-    if (car.timing.replace) {
-      html += `<br>${t('replaceAt')} ${human(car.timing.replace)}`;
-    }
-    html += `</p></div>`;
-  }
-
-  if (car.tires) {
-    html += `
-      <div class="card">
-        <h3>${t('wheels')}</h3>
-        <ul>
-          <li>${t('tireSize')}: <b>${car.tires.size}</b></li>
-          <li>${t('pressure')}: ${t('front')} — <b>${car.tires.pressure.front}</b>, ${t('rear')} — <b>${car.tires.pressure.rear}</b></li>
-        </ul>
-      </div>
-    `;
-  }
-
-  if (car.notes && car.notes[currentLang] && car.notes[currentLang].length) {
-    html += `<div class="card"><h3>${t('recommendations')}</h3><ul>`;
-    car.notes[currentLang].forEach(n => html += `<li>${n}</li>`);
-    html += `</ul></div>`;
-  }
-
   document.getElementById('result').innerHTML = html;
   document.getElementById('result').style.display = 'block';
   lastQuery = { carKey, mileage };
 
-  attachPartToggleListeners();
-  attachScrollEffect();
-}
-
-function attachPartToggleListeners() {
-  document.querySelectorAll('.card h3, .card h4').forEach(header => {
-    const newHeader = header.cloneNode(true);
-    header.parentNode.replaceChild(newHeader, header);
-    
-    newHeader.addEventListener('click', () => {
-      const parts = newHeader.nextElementSibling;
-      if (parts && parts.classList.contains('parts')) {
-        newHeader.classList.toggle('show');
-        parts.classList.toggle('show');
+  // Подключаем обработчики toggle
+  document.querySelectorAll('[data-toggle]').forEach(el => {
+    el.addEventListener('click', function(e) {
+      e.preventDefault();
+      const targetId = this.getAttribute('data-toggle');
+      const target = document.getElementById(targetId);
+      const icon = this.querySelector('.toggle-icon');
+      
+      if (target && icon) {
+        target.classList.toggle('show');
+        icon.textContent = target.classList.contains('show') ? '−' : '+';
       }
     });
   });
-}
-
-function attachScrollEffect() {
-  const cards = document.querySelectorAll('.card');
-  if (!cards.length) return;
-
-  let ticking = false;
-
-  function updateSpacing() {
-    const scrollTop = window.scrollY;
-    if (scrollTop < 100) {
-      cards.forEach(card => card.style.marginBottom = '16px');
-      ticking = false;
-      return;
-    }
-
-    const baseGap = 16;
-    const maxExtra = 24;
-    const factor = Math.min(1, (scrollTop - 100) / 700);
-    const dynamicGap = baseGap + factor * maxExtra;
-
-    cards.forEach(card => {
-      card.style.marginBottom = `${dynamicGap}px`;
-    });
-
-    ticking = false;
-  }
-
-  function onScroll() {
-    if (!ticking) {
-      requestAnimationFrame(updateSpacing);
-      ticking = true;
-    }
-  }
-
-  window.removeEventListener('scroll', onScroll);
-  window.addEventListener('scroll', onScroll, { passive: true });
 }
 
 // === ИНИЦИАЛИЗАЦИЯ ===
@@ -420,7 +233,6 @@ function init() {
   setTheme(currentTheme);
   setLanguage(currentLang);
 
-  // Обработчики
   document.getElementById('langToggle').addEventListener('click', () => {
     setLanguage(currentLang === 'ru' ? 'en' : 'ru');
   });
@@ -432,20 +244,18 @@ function init() {
   document.getElementById('submitBtn').addEventListener('click', () => {
     const vin = document.getElementById('vin').value.trim();
     const mileage = parseInt(document.getElementById('mileage').value) || 0;
-
     if (!vin) return alert(t('labelVin') + '?');
     if (mileage < 0 || mileage > 500000) return alert(t('labelMileage') + ': 0–500,000 km');
-
+    
     const carKey = findCar(vin);
     if (carKey && carsData[carKey]) {
       renderReport(carKey, mileage);
     } else {
       const msg = currentLang === 'ru' 
-        ? '<h2>Авто не найдено</h2><p>Поддерживаемые: Prius 2021, Fit 2020, Escudo 2015, XV 2019, C200 2019</p>' 
-        : '<h2>Not found</h2><p>Supported: Prius 2021, Fit 2020, Escudo 2015, XV 2019, C200 2019</p>';
+        ? '<h2>Авто не найдено</h2><p>Попробуйте: Prius 2021</p>' 
+        : '<h2>Not found</h2><p>Try: Prius 2021</p>';
       document.getElementById('result').innerHTML = `<div class="card">${msg}</div>`;
       document.getElementById('result').style.display = 'block';
-      lastQuery = { carKey: null, mileage: 0 };
     }
   });
 
@@ -454,9 +264,4 @@ function init() {
   });
 }
 
-// Запуск
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', init);
-} else {
-  init();
-}
+document.addEventListener('DOMContentLoaded', init);
