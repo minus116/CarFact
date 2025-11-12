@@ -267,10 +267,10 @@ function renderReport(carKey, mileage) {
   attachScrollEffect();
 }
 
-// ✅ Гарантированно работающий клик по +/−
+// ✅ Работающий клик по +/−
 function attachPartToggleListeners() {
   document.querySelectorAll('.card h3, .card h4').forEach(header => {
-    // Удаляем дублирующиеся обработчики
+    // Удаляем старые обработчики (защита от дубликатов)
     const clone = header.cloneNode(true);
     header.parentNode.replaceChild(clone, header);
     
@@ -318,7 +318,6 @@ function attachScrollEffect() {
     }
   }
 
-  // Удаляем старые слушатели (защита от утечек)
   window.removeEventListener('scroll', onScroll);
   window.addEventListener('scroll', onScroll, { passive: true });
 }
