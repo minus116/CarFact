@@ -49,10 +49,10 @@ const carsData = {
       size: "185/60 R15", 
       pressure: { front: "2.3", rear: "2.2" },
       regions: {
-        japan: ["Bridgestone", "Yokohama", "Falken"],
-        china: ["Linglong", "Giti", "Westlake"],
+        japan: ["Bridgestone", "Yokohama", "Toyo"],
+        china: ["Triangle", "Sailun", "Double Coin"],
         korea: ["Kumho", "Nexen", "Hankook"],
-        europe: ["Michelin", "Continental", "Pirelli"]
+        europe: ["Michelin", "Continental", "Goodyear"]
       }
     },
     notes: {
@@ -79,10 +79,10 @@ const carsData = {
       size: "215/60 R17", 
       pressure: { front: "2.3", rear: "2.3" },
       regions: {
-        japan: ["Bridgestone", "Toyo", "Falken"],
-        china: ["Triangle", "Aeolus", "Giti"],
+        japan: ["Bridgestone", "Yokohama", "Toyo"],
+        china: ["Triangle", "Sailun", "Double Coin"],
         korea: ["Kumho", "Nexen", "Hankook"],
-        europe: ["Michelin", "Continental", "Nokian"]
+        europe: ["Michelin", "Continental", "Goodyear"]
       }
     },
     notes: {
@@ -109,10 +109,10 @@ const carsData = {
       size: "225/55 R18", 
       pressure: { front: "2.4", rear: "2.3" },
       regions: {
-        japan: ["Yokohama", "Bridgestone", "Falken"],
-        china: ["Sailun", "Linglong", "Westlake"],
+        japan: ["Bridgestone", "Yokohama", "Toyo"],
+        china: ["Triangle", "Sailun", "Double Coin"],
         korea: ["Kumho", "Nexen", "Hankook"],
-        europe: ["Michelin", "Continental", "Pirelli"]
+        europe: ["Michelin", "Continental", "Goodyear"]
       }
     },
     notes: {
@@ -140,9 +140,9 @@ const carsData = {
       pressure: { front: "2.3", rear: "2.4" },
       regions: {
         japan: ["Bridgestone", "Yokohama", "Toyo"],
-        china: ["Giti", "Linglong", "Aeolus"],
+        china: ["Triangle", "Sailun", "Double Coin"],
         korea: ["Kumho", "Nexen", "Hankook"],
-        europe: ["Michelin", "Continental", "Pirelli"]
+        europe: ["Michelin", "Continental", "Goodyear"]
       }
     },
     notes: {
@@ -237,6 +237,7 @@ const translations = {
 
 let currentLang = 'ru';
 let currentTheme = 'light';
+let lastQuery = { carKey: null, mileage: 0 };
 
 function t(key) { return translations[currentLang][key] || key; }
 
@@ -250,7 +251,6 @@ function setLanguage(lang) {
   document.documentElement.lang = lang;
   document.getElementById('langToggle').textContent = lang === 'ru' ? 'RU' : 'EN';
   updateUITexts();
-  // Перерисовываем отчёт при смене языка
   if (lastQuery.carKey) {
     renderReport(lastQuery.carKey, lastQuery.mileage);
   }
@@ -281,21 +281,16 @@ function findCar(query) {
   return null;
 }
 
-// Глобальное состояние для последнего запроса
-let lastQuery = { carKey: null, mileage: 0 };
-
 function renderReport(carKey, mileage) {
   const car = carsData[carKey];
   const nextTO = Math.ceil(mileage / car.intervals) * car.intervals;
   const diff = nextTO - mileage;
   const isOverdue = diff < 0;
 
-  // Специальная логика для "сейчас"
   const nowText = diff === 0 ? t('now') : (isOverdue ? t('overdue') : t('dueIn'));
   const diffValue = diff !== 0 ? Math.abs(diff) : '';
   const diffUnit = diff !== 0 ? t('km') : '';
 
-  // Марки резины по регионам
   const tireRegions = car.tires.regions;
   
   let html = `
@@ -312,7 +307,7 @@ function renderReport(carKey, mileage) {
       <h3 data-toggle="oil">${t('oil')} <span class="toggle-icon">+</span></h3>
       <p>${t('every')} ${human(car.oil.every)}</p>
       <div id="oil" class="parts">
-        <div class="part-item">${car.oil.parts.join(', ')}</div>
+        <div class="dropdown-content">${car.oil.parts.join(', ')}</div>
       </div>
     </div>
 
@@ -321,22 +316,22 @@ function renderReport(carKey, mileage) {
       <ul>
         <li data-toggle="oil-filter">${t('oilFilter')} — ${human(car.filters.oil.interval)} <span class="toggle-icon">+</span>
           <div id="oil-filter" class="parts">
-            <div class="part-item">${car.filters.oil.parts.join(', ')}</div>
+            <div class="dropdown-content">${car.filters.oil.parts.join(', ')}</div>
           </div>
         </li>
         <li data-toggle="air-filter">${t('airFilter')} — ${human(car.filters.air.interval)} <span class="toggle-icon">+</span>
           <div id="air-filter" class="parts">
-            <div class="part-item">${car.filters.air.parts.join(', ')}</div>
+            <div class="dropdown-content">${car.filters.air.parts.join(', ')}</div>
           </div>
         </li>
         <li data-toggle="cabin-filter">${t('cabinFilter')} — ${human(car.filters.cabin.interval)} <span class="toggle-icon">+</span>
           <div id="cabin-filter" class="parts">
-            <div class="part-item">${car.filters.cabin.parts.join(', ')}</div>
+            <div class="dropdown-content">${car.filters.cabin.parts.join(', ')}</div>
           </div>
         </li>
         ${car.filters.fuel ? `<li data-toggle="fuel-filter">${t('fuelFilter')} — ${human(car.filters.fuel.interval)} <span class="toggle-icon">+</span>
           <div id="fuel-filter" class="parts">
-            <div class="part-item">${car.filters.fuel.parts.join(', ')}</div>
+            <div class="dropdown-content">${car.filters.fuel.parts.join(', ')}</div>
           </div>
         </li>` : ''}
       </ul>
@@ -346,7 +341,7 @@ function renderReport(carKey, mileage) {
       <h3 data-toggle="spark">${t('sparkPlugs')} <span class="toggle-icon">+</span></h3>
       <p>${t('replaceAt')} ${human(car.sparkPlugs.interval)}</p>
       <div id="spark" class="parts">
-        <div class="part-item">${car.sparkPlugs.parts.join(', ')}</div>
+        <div class="dropdown-content">${car.sparkPlugs.parts.join(', ')}</div>
       </div>
     </div>
 
@@ -355,13 +350,13 @@ function renderReport(carKey, mileage) {
       <h4 data-toggle="brakes-front">${t('brakeFront')} <span class="toggle-icon">+</span></h4>
       <p>${t('replaceAt')} ${human(car.brakePads.front.interval)}</p>
       <div id="brakes-front" class="parts">
-        <div class="part-item">${car.brakePads.front.parts.join(', ')}</div>
+        <div class="dropdown-content">${car.brakePads.front.parts.join(', ')}</div>
       </div>
       
       <h4 data-toggle="brakes-rear">${t('brakeRear')} <span class="toggle-icon">+</span></h4>
       <p>${t('replaceAt')} ${human(car.brakePads.rear.interval)}</p>
       <div id="brakes-rear" class="parts">
-        <div class="part-item">${car.brakePads.rear.parts.join(', ')}</div>
+        <div class="dropdown-content">${car.brakePads.rear.parts.join(', ')}</div>
       </div>
     </div>
 
@@ -387,21 +382,32 @@ function renderReport(carKey, mileage) {
   document.getElementById('result').style.display = 'block';
   lastQuery = { carKey, mileage };
 
-  // Подключаем toggle для всех элементов
-  document.querySelectorAll('[data-toggle]').forEach(el => {
-    el.addEventListener('click', function(e) {
-      e.preventDefault();
-      const targetId = this.getAttribute('data-toggle');
-      const target = document.getElementById(targetId);
-      const icon = this.querySelector('.toggle-icon');
-      if (target && icon) {
-        target.classList.toggle('show');
-        icon.textContent = target.classList.contains('show') ? '−' : '+';
+  // Универсальная функция для подключения обработчиков
+  function setupToggleListeners() {
+    document.querySelectorAll('[data-toggle]').forEach(el => {
+      const originalHandler = el.onclick;
+      
+      if (originalHandler) {
+        el.onclick = null;
       }
+      
+      el.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        const targetId = this.getAttribute('data-toggle');
+        const target = document.getElementById(targetId);
+        const icon = this.querySelector('.toggle-icon');
+        
+        if (target && icon) {
+          target.classList.toggle('show');
+          icon.textContent = target.classList.contains('show') ? '−' : '+';
+        }
+      });
     });
-  });
+  }
 
-  // Восстанавливаем анимацию растягивания
+  setupToggleListeners();
   attachScrollEffect();
 }
 
