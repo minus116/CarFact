@@ -227,14 +227,12 @@ button.secondary {
 }
 
 .regions-list {
-  margin-top: 0.5rem;
+  margin-top: 0.8rem;
   padding-left: 1rem;
 }
 
 .region-item {
-  font-size: 0.8rem;
-  color: var(--light-text);
-  margin-top: 0.3rem;
+  margin-top: 0.2rem;
 }
 
 /* Стили для кругляшков */
