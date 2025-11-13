@@ -1,40 +1,50 @@
-<!DOCTYPE html>
-<html lang="ru" dir="ltr">
+<!doctype html>
+<html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <meta name="theme-color" content="#ffffff">
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/style.css">
-  <title>CarFact</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>CarFact — проверка авто по VIN</title>
+  <link rel="stylesheet" href="assets/styles.css">
 </head>
 <body>
-  <header>
-    <div class="logo">
-      <h1 id="pageTitle">CarFact.</h1>
-    </div>
-    <div class="controls">
-      <button id="langToggle" class="control-btn">RU</button>
-      <button id="themeToggle" class="control-btn">
-        <span class="theme-icon-container">
-          <img id="themeIcon" src="icons/sun.svg" alt="Theme" width="16" height="16">
-        </span>
-      </button>
-    </div>
-  </header>
+  <main class="container">
+    <header class="header">
+      <h1>CarFact</h1>
+      <p class="tagline">Проверка автомобиля по VIN / номеру кузова / модели — история ТО и сервисов</p>
+    </header>
 
-  <main>
-    <div class="input-group">
-      <label for="vin" id="labelVin">VIN / Номер кузова / Модель</label>
-      <input type="text" id="vin" placeholder="JTDKN3DU3M3123456 или Prius 2021">
-      <label for="mileage" id="labelMileage">Пробег (км)</label>
-      <input type="number" id="mileage" placeholder="45000" min="0" max="500000">
-      <button id="submitBtn" class="primary">Показать ТО</button>
-    </div>
+    <section class="search-card" aria-labelledby="search-title">
+      <h2 id="search-title" class="visually-hidden">Поиск автомобиля</h2>
 
-    <div id="result"></div>
+      <form id="searchForm" class="form" autocomplete="off">
+        <label class="field">
+          <span class="label-text">VIN или номер кузова</span>
+          <input id="qInput" name="q" inputmode="latin" placeholder="Введите VIN (17 символов) или номер кузова" />
+          <div id="qError" class="field-error" aria-live="polite"></div>
+        </label>
+
+        <label class="field">
+          <span class="label-text">Пробег (км) — опционально</span>
+          <input id="mileageInput" name="mileage" inputmode="numeric" placeholder="Например, 120000" />
+          <div id="mError" class="field-error" aria-live="polite"></div>
+        </label>
+
+        <div class="actions">
+          <button id="submitBtn" type="submit">Показать ТО</button>
+          <button id="clearBtn" type="button" class="muted">Очистить</button>
+        </div>
+      </form>
+
+      <div id="status" class="status" aria-live="polite"></div>
+    </section>
+
+    <section id="results" class="results" aria-live="polite"></section>
+
+    <footer class="footer">
+      <small>© CarFact — улучшенная версия файлов. Замените в репозитории /assets и index.html</small>
+    </footer>
   </main>
 
-  <script src="assets/script.js"></script>
+  <script type="module" src="assets/main.js"></script>
 </body>
 </html>
