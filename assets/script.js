@@ -1,3 +1,4 @@
+// Данные автомобилей
 const carsData = {
   "prius 2021": {
     name: { ru: "Toyota Prius (2021)", en: "Toyota Prius (2021)" },
@@ -152,6 +153,7 @@ const carsData = {
   }
 };
 
+// Переводы
 const translations = {
   ru: {
     title: "CarFact.",
@@ -235,11 +237,15 @@ const translations = {
   }
 };
 
+// Глобальные переменные
 let currentLang = 'ru';
 let currentTheme = 'light';
 let lastQuery = { carKey: null, mileage: 0 };
 
-function t(key) { return translations[currentLang][key] || key; }
+// Вспомогательные функции
+function t(key) {
+  return translations[currentLang][key] || key;
+}
 
 function human(km) {
   const k = Math.floor(km / 1000);
@@ -281,6 +287,7 @@ function findCar(query) {
   return null;
 }
 
+// Основная функция рендеринга
 function renderReport(carKey, mileage) {
   const car = carsData[carKey];
   const nextTO = Math.ceil(mileage / car.intervals) * car.intervals;
@@ -306,7 +313,7 @@ function renderReport(carKey, mileage) {
       </div>
       <p>${t('every')} ${human(car.oil.every)}</p>
       <div id="oil" class="parts">
-        <div class="dropdown-content">${car.oil.parts.join(', ')}</div>
+        <div class="part-item">${car.oil.parts.join(', ')}</div>
       </div>
     </div>
 
@@ -322,12 +329,10 @@ function renderReport(carKey, mileage) {
         ${car.filters.fuel ? `<li>${t('fuelFilter')} — ${human(car.filters.fuel.interval)}</li>` : ''}
       </ul>
       <div id="filters" class="parts">
-        <div class="dropdown-content">
-          <strong>${t('oilFilter')}:</strong> ${car.filters.oil.parts.join(', ')}<br>
-          <strong>${t('airFilter')}:</strong> ${car.filters.air.parts.join(', ')}<br>
-          <strong>${t('cabinFilter')}:</strong> ${car.filters.cabin.parts.join(', ')}<br>
-          ${car.filters.fuel ? `<strong>${t('fuelFilter')}:</strong> ${car.filters.fuel.parts.join(', ')}` : ''}
-        </div>
+        <div class="part-item"><strong>${t('oilFilter')}:</strong> ${car.filters.oil.parts.join(', ')}</div>
+        <div class="part-item"><strong>${t('airFilter')}:</strong> ${car.filters.air.parts.join(', ')}</div>
+        <div class="part-item"><strong>${t('cabinFilter')}:</strong> ${car.filters.cabin.parts.join(', ')}</div>
+        ${car.filters.fuel ? `<div class="part-item"><strong>${t('fuelFilter')}:</strong> ${car.filters.fuel.parts.join(', ')}</div>` : ''}
       </div>
     </div>
 
@@ -338,7 +343,7 @@ function renderReport(carKey, mileage) {
       </div>
       <p>${t('replaceAt')} ${human(car.sparkPlugs.interval)}</p>
       <div id="spark" class="parts">
-        <div class="dropdown-content">${car.sparkPlugs.parts.join(', ')}</div>
+        <div class="part-item">${car.sparkPlugs.parts.join(', ')}</div>
       </div>
     </div>
 
@@ -352,10 +357,8 @@ function renderReport(carKey, mileage) {
         <li>${t('brakeRear')} — ${human(car.brakePads.rear.interval)}</li>
       </ul>
       <div id="brakes" class="parts">
-        <div class="dropdown-content">
-          <strong>${t('brakeFront')}:</strong> ${car.brakePads.front.parts.join(', ')}<br>
-          <strong>${t('brakeRear')}:</strong> ${car.brakePads.rear.parts.join(', ')}
-        </div>
+        <div class="part-item"><strong>${t('brakeFront')}:</strong> ${car.brakePads.front.parts.join(', ')}</div>
+        <div class="part-item"><strong>${t('brakeRear')}:</strong> ${car.brakePads.rear.parts.join(', ')}</div>
       </div>
     </div>
 
@@ -384,75 +387,30 @@ function renderReport(carKey, mileage) {
   document.getElementById('result').style.display = 'block';
   lastQuery = { carKey, mileage };
 
-  function setupToggleListeners() {
-    document.querySelectorAll('[data-toggle]').forEach(el => {
-      const originalHandler = el.onclick;
+  // Подключаем обработчики для кругляшков
+  document.querySelectorAll('[data-toggle]').forEach(el => {
+    el.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
       
-      if (originalHandler) {
-        el.onclick = null;
+      const targetId = this.getAttribute('data-toggle');
+      const target = document.getElementById(targetId);
+      const circle = this.querySelector('.toggle-circle');
+      
+      if (target && circle) {
+        target.classList.toggle('show');
+        circle.classList.toggle('open');
       }
-      
-      el.addEventListener('click', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        
-        const targetId = this.getAttribute('data-toggle');
-        const target = document.getElementById(targetId);
-        const circle = this.querySelector('.toggle-circle');
-        
-        if (target && circle) {
-          target.classList.toggle('show');
-          circle.classList.toggle('open');
-        }
-      });
     });
-  }
-
-  setupToggleListeners();
-  attachScrollEffect();
+  });
 }
 
-function attachScrollEffect() {
-  const cards = document.querySelectorAll('.card');
-  if (!cards.length) return;
-
-  let ticking = false;
-
-  function updateSpacing() {
-    const scrollTop = window.scrollY;
-    if (scrollTop < 100) {
-      cards.forEach(card => card.style.marginBottom = '16px');
-      ticking = false;
-      return;
-    }
-
-    const baseGap = 16;
-    const maxExtra = 24;
-    const factor = Math.min(1, (scrollTop - 100) / 700);
-    const dynamicGap = baseGap + factor * maxExtra;
-
-    cards.forEach(card => {
-      card.style.marginBottom = `${dynamicGap}px`;
-    });
-
-    ticking = false;
-  }
-
-  function onScroll() {
-    if (!ticking) {
-      requestAnimationFrame(updateSpacing);
-      ticking = true;
-    }
-  }
-
-  window.removeEventListener('scroll', onScroll);
-  window.addEventListener('scroll', onScroll, { passive: true });
-}
-
+// Инициализация
 function init() {
-  setTheme(currentTheme);
   setLanguage(currentLang);
+  setTheme(currentTheme);
 
+  // Обработчики для кнопок
   document.getElementById('langToggle').addEventListener('click', () => {
     setLanguage(currentLang === 'ru' ? 'en' : 'ru');
   });
@@ -492,4 +450,5 @@ function init() {
   });
 }
 
+// Запуск при загрузке страницы
 document.addEventListener('DOMContentLoaded', init);
