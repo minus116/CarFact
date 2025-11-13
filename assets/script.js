@@ -155,8 +155,8 @@ const carsData = {
 const translations = {
   ru: {
     title: "CarFact.",
-    labelVin: "VIN / Номер кузова / Модель",
-    labelMileage: "Пробег (км)",
+    labelVin: "VIN или номер кузова",
+    labelMileage: "Пробег (км) — опционально",
     btnSubmit: "Показать ТО",
     nextTO: "Ближайшее техническое обслуживание",
     recommendedByManufacturer: "рекомендуемое заводом изготовителем",
@@ -195,8 +195,8 @@ const translations = {
   },
   en: {
     title: "CarFact.",
-    labelVin: "VIN / Body No. / Model",
-    labelMileage: "Mileage (km)",
+    labelVin: "VIN or chassis number",
+    labelMileage: "Mileage (km) — optional",
     btnSubmit: "Show Maintenance",
     nextTO: "Next Service",
     recommendedByManufacturer: "as recommended by the manufacturer",
@@ -236,7 +236,6 @@ const translations = {
 };
 
 let currentLang = 'ru';
-let currentTheme = 'light';
 let lastQuery = { carKey: null, mileage: 0 };
 
 function t(key) { return translations[currentLang][key] || key; }
@@ -244,31 +243,6 @@ function t(key) { return translations[currentLang][key] || key; }
 function human(km) {
   const k = Math.floor(km / 1000);
   return currentLang === 'ru' ? `${k} тыс. км` : `${k}k km`;
-}
-
-function setLanguage(lang) {
-  currentLang = lang;
-  document.documentElement.lang = lang;
-  document.getElementById('langToggle').textContent = lang === 'ru' ? 'RU' : 'EN';
-  updateUITexts();
-  if (lastQuery.carKey) {
-    renderReport(lastQuery.carKey, lastQuery.mileage);
-  }
-}
-
-function setTheme(theme) {
-  if (currentTheme === theme) return;
-  currentTheme = theme;
-  document.documentElement.setAttribute('data-theme', theme);
-  document.getElementById('themeIcon').src = theme === 'dark' ? 'icons/moon.svg' : 'icons/sun.svg';
-}
-
-function updateUITexts() {
-  document.getElementById('pageTitle').textContent = t('title');
-  document.getElementById('labelVin').textContent = t('labelVin');
-  document.getElementById('labelMileage').textContent = t('labelMileage');
-  document.getElementById('submitBtn').textContent = t('btnSubmit');
-  document.title = t('title');
 }
 
 function findCar(query) {
@@ -287,93 +261,79 @@ function renderReport(carKey, mileage) {
   const diff = nextTO - mileage;
   const isOverdue = diff < 0;
 
-  const nowText = diff === 0 ? t('now') : (isOverdue ? `${t('overdue')} ${Math.abs(diff)} ${t('km')}` : `${t('dueIn')} ${Math.abs(diff)} ${t('km')}`);
-  
-  const tireRegions = car.tires.regions;
-  
   let html = `
     <div class="card next-to-card">
-      <h2>${t('nextTO')} <span class="service-distance">${human(nextTO)}</span></h2>
-      <p class="next-to-diff">${diff === 0 ? t('now') : nowText}</p>
+      <h2>${t('nextTO')}</h2>
+      <p class="next-to-value">${human(nextTO)}</p>
+      <p class="next-to-diff">${isOverdue ? t('overdue') : t('dueIn')} ${Math.abs(diff)} ${t('km')}</p>
     </div>
 
     <div class="card">
-      <div class="toggle-container" data-toggle="oil">
-        <h3>${t('oil')}</h3>
-        <span class="toggle-circle"></span>
-      </div>
+      <h3>${t('oil')}</h3>
       <p>${t('every')} ${human(car.oil.every)}</p>
-      <div id="oil" class="parts">
-        <div class="dropdown-content">${car.oil.parts.join(', ')}</div>
+      <div class="parts">
+        <div class="part-item">${car.oil.parts.join(', ')}</div>
       </div>
     </div>
 
     <div class="card">
-      <div class="toggle-container" data-toggle="filters">
-        <h3>${t('filters')}</h3>
-        <span class="toggle-circle"></span>
-      </div>
+      <h3>${t('filters')}</h3>
       <ul>
-        <li>${t('oilFilter')} — ${human(car.filters.oil.interval)}</li>
-        <li>${t('airFilter')} — ${human(car.filters.air.interval)}</li>
-        <li>${t('cabinFilter')} — ${human(car.filters.cabin.interval)}</li>
-        ${car.filters.fuel ? `<li>${t('fuelFilter')} — ${human(car.filters.fuel.interval)}</li>` : ''}
+        <li>${t('oilFilter')} — ${human(car.filters.oil.interval)}
+          <div class="parts">
+            <div class="part-item">${car.filters.oil.parts.join(', ')}</div>
+          </div>
+        </li>
+        <li>${t('airFilter')} — ${human(car.filters.air.interval)}
+          <div class="parts">
+            <div class="part-item">${car.filters.air.parts.join(', ')}</div>
+          </div>
+        </li>
+        <li>${t('cabinFilter')} — ${human(car.filters.cabin.interval)}
+          <div class="parts">
+            <div class="part-item">${car.filters.cabin.parts.join(', ')}</div>
+          </div>
+        </li>
+        ${car.filters.fuel ? `<li>${t('fuelFilter')} — ${human(car.filters.fuel.interval)}
+          <div class="parts">
+            <div class="part-item">${car.filters.fuel.parts.join(', ')}</div>
+          </div>
+        </li>` : ''}
       </ul>
-      <div id="filters" class="parts">
-        <div class="dropdown-content">
-          <strong>${t('oilFilter')}:</strong> ${car.filters.oil.parts.join(', ')}<br>
-          <strong>${t('airFilter')}:</strong> ${car.filters.air.parts.join(', ')}<br>
-          <strong>${t('cabinFilter')}:</strong> ${car.filters.cabin.parts.join(', ')}<br>
-          ${car.filters.fuel ? `<strong>${t('fuelFilter')}:</strong> ${car.filters.fuel.parts.join(', ')}` : ''}
-        </div>
-      </div>
     </div>
 
     <div class="card">
-      <div class="toggle-container" data-toggle="spark">
-        <h3>${t('sparkPlugs')}</h3>
-        <span class="toggle-circle"></span>
-      </div>
+      <h3>${t('sparkPlugs')}</h3>
       <p>${t('replaceAt')} ${human(car.sparkPlugs.interval)}</p>
-      <div id="spark" class="parts">
-        <div class="dropdown-content">${car.sparkPlugs.parts.join(', ')}</div>
+      <div class="parts">
+        <div class="part-item">${car.sparkPlugs.parts.join(', ')}</div>
       </div>
     </div>
 
     <div class="card">
-      <div class="toggle-container" data-toggle="brakes">
-        <h3>${t('brakes')}</h3>
-        <span class="toggle-circle"></span>
-      </div>
-      <ul>
-        <li>${t('brakeFront')} — ${human(car.brakePads.front.interval)}</li>
-        <li>${t('brakeRear')} — ${human(car.brakePads.rear.interval)}</li>
-      </ul>
-      <div id="brakes" class="parts">
-        <div class="dropdown-content">
-          <strong>${t('brakeFront')}:</strong> ${car.brakePads.front.parts.join(', ')}<br>
-          <strong>${t('brakeRear')}:</strong> ${car.brakePads.rear.parts.join(', ')}
+      <h3>${t('brakes')}</h3>
+      <p>${t('brakeFront')} — ${human(car.brakePads.front.interval)}
+        <div class="parts">
+          <div class="part-item">${car.brakePads.front.parts.join(', ')}</div>
         </div>
-      </div>
+      </p>
+      <p>${t('brakeRear')} — ${human(car.brakePads.rear.interval)}
+        <div class="parts">
+          <div class="part-item">${car.brakePads.rear.parts.join(', ')}</div>
+        </div>
+      </p>
     </div>
 
-    <div class="card wheels-card" style="text-align: left; padding-left: 0;">
-      <div class="toggle-container" data-toggle="wheels" style="text-align: left;">
-        <h3>${t('wheels')}</h3>
-        <span class="toggle-circle"></span>
-      </div>
-      <ul style="text-align: left; padding-left: 0; margin-left: 0;">
-        <li style="text-align: left;">${t('tireSize')}: <b>${car.tires.size}</b></li>
-        <li style="text-align: left;">${t('pressure')}: ${t('front')} — <b>${car.tires.pressure.front}</b>, ${t('rear')} — <b>${car.tires.pressure.rear}</b></li>
-      </ul>
-      <div id="wheels" class="parts" style="text-align: left; padding-left: 0; margin-left: 0;">
-        <h4 style="text-align: left;">${t('tireBrands')}</h4>
-        <div class="regions-list" style="text-align: left; padding-left: 0; margin-left: 0;">
-          <div class="region-item" style="text-align: left; padding-left: 0; margin-left: 0;"><strong>${t('japan')}:</strong> ${tireRegions.japan.join(', ')}</div>
-          <div class="region-item" style="text-align: left; padding-left: 0; margin-left: 0;"><strong>${t('china')}:</strong> ${tireRegions.china.join(', ')}</div>
-          <div class="region-item" style="text-align: left; padding-left: 0; margin-left: 0;"><strong>${t('korea')}:</strong> ${tireRegions.korea.join(', ')}</div>
-          <div class="region-item" style="text-align: left; padding-left: 0; margin-left: 0;"><strong>${t('europe')}:</strong> ${tireRegions.europe.join(', ')}</div>
-        </div>
+    <div class="card">
+      <h3>${t('wheels')}</h3>
+      <p>${t('tireSize')}: <b>${car.tires.size}</b></p>
+      <p>${t('pressure')}: ${t('front')} — <b>${car.tires.pressure.front}</b>, ${t('rear')} — <b>${car.tires.pressure.rear}</b></p>
+      <h4>${t('tireBrands')}</h4>
+      <div class="regions-list">
+        <div class="region-item"><strong>${t('japan')}:</strong> ${car.tires.regions.japan.join(', ')}</div>
+        <div class="region-item"><strong>${t('china')}:</strong> ${car.tires.regions.china.join(', ')}</div>
+        <div class="region-item"><strong>${t('korea')}:</strong> ${car.tires.regions.korea.join(', ')}</div>
+        <div class="region-item"><strong>${t('europe')}:</strong> ${car.tires.regions.europe.join(', ')}</div>
       </div>
     </div>
   `;
@@ -382,31 +342,7 @@ function renderReport(carKey, mileage) {
   document.getElementById('result').style.display = 'block';
   lastQuery = { carKey, mileage };
 
-  function setupToggleListeners() {
-    document.querySelectorAll('[data-toggle]').forEach(el => {
-      const originalHandler = el.onclick;
-      
-      if (originalHandler) {
-        el.onclick = null;
-      }
-      
-      el.addEventListener('click', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        
-        const targetId = this.getAttribute('data-toggle');
-        const target = document.getElementById(targetId);
-        const circle = this.querySelector('.toggle-circle');
-        
-        if (target && circle) {
-          target.classList.toggle('show');
-          circle.classList.toggle('open');
-        }
-      });
-    });
-  }
-
-  setupToggleListeners();
+  // Восстанавливаем анимацию растягивания
   attachScrollEffect();
 }
 
@@ -419,13 +355,13 @@ function attachScrollEffect() {
   function updateSpacing() {
     const scrollTop = window.scrollY;
     if (scrollTop < 100) {
-      cards.forEach(card => card.style.marginBottom = '10px');
+      cards.forEach(card => card.style.marginBottom = '16px');
       ticking = false;
       return;
     }
 
-    const baseGap = 10;
-    const maxExtra = 14;
+    const baseGap = 16;
+    const maxExtra = 24;
     const factor = Math.min(1, (scrollTop - 100) / 700);
     const dynamicGap = baseGap + factor * maxExtra;
 
@@ -448,17 +384,6 @@ function attachScrollEffect() {
 }
 
 function init() {
-  setTheme(currentTheme);
-  setLanguage(currentLang);
-
-  document.getElementById('langToggle').addEventListener('click', () => {
-    setLanguage(currentLang === 'ru' ? 'en' : 'ru');
-  });
-
-  document.getElementById('themeToggle').addEventListener('click', () => {
-    setTheme(currentTheme === 'light' ? 'dark' : 'light');
-  });
-
   document.getElementById('submitBtn').addEventListener('click', () => {
     const vin = document.getElementById('vin').value.trim();
     const mileage = parseInt(document.getElementById('mileage').value) || 0;
@@ -476,6 +401,13 @@ function init() {
       document.getElementById('result').style.display = 'block';
       lastQuery = { carKey: null, mileage: 0 };
     }
+  });
+
+  document.getElementById('clearBtn').addEventListener('click', () => {
+    document.getElementById('vin').value = '';
+    document.getElementById('mileage').value = '';
+    document.getElementById('result').innerHTML = '';
+    document.getElementById('result').style.display = 'none';
   });
 
   document.addEventListener('keypress', e => {
