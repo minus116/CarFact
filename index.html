@@ -4,34 +4,51 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>CarFact — проверка авто по VIN</title>
+  <meta name="cf-api-base" content="https://your-api.example.com"> <!-- <-- замените на адрес вашего API -->
   <link rel="stylesheet" href="assets/styles.css">
 </head>
 <body>
-  <main class="container">
+  <main class="container" id="app">
     <header class="header">
-      <h1>CarFact</h1>
-      <p class="tagline">Проверка автомобиля по VIN / номеру кузова / модели — история ТО и сервисов</p>
+      <div class="brand">
+        <h1>CarFact</h1>
+        <p class="tagline" data-i18n="tagline">Проверка автомобиля по VIN / номеру кузова / модели — история ТО и сервисов</p>
+      </div>
+      <div class="controls">
+        <div class="control">
+          <label class="switch">
+            <input id="themeToggle" type="checkbox" aria-label="Toggle theme">
+            <span class="slider" title="Toggle theme">🌞/🌙</span>
+          </label>
+        </div>
+        <div class="control">
+          <select id="langSelect" aria-label="Select language">
+            <option value="ru">RU</option>
+            <option value="en">EN</option>
+          </select>
+        </div>
+      </div>
     </header>
 
     <section class="search-card" aria-labelledby="search-title">
-      <h2 id="search-title" class="visually-hidden">Поиск автомобиля</h2>
+      <h2 id="search-title" class="visually-hidden" data-i18n="searchTitle">Поиск автомобиля</h2>
 
       <form id="searchForm" class="form" autocomplete="off">
         <label class="field">
-          <span class="label-text">VIN или номер кузова</span>
+          <span class="label-text" data-i18n="labelVin">VIN или номер кузова</span>
           <input id="qInput" name="q" inputmode="latin" placeholder="Введите VIN (17 символов) или номер кузова" />
           <div id="qError" class="field-error" aria-live="polite"></div>
         </label>
 
         <label class="field">
-          <span class="label-text">Пробег (км) — опционально</span>
+          <span class="label-text" data-i18n="labelMileage">Пробег (км) — опционально</span>
           <input id="mileageInput" name="mileage" inputmode="numeric" placeholder="Например, 120000" />
           <div id="mError" class="field-error" aria-live="polite"></div>
         </label>
 
         <div class="actions">
-          <button id="submitBtn" type="submit">Показать ТО</button>
-          <button id="clearBtn" type="button" class="muted">Очистить</button>
+          <button id="submitBtn" type="submit" data-i18n="btnShow">Показать ТО</button>
+          <button id="clearBtn" type="button" class="muted" data-i18n="btnClear">Очистить</button>
         </div>
       </form>
 
@@ -41,7 +58,7 @@
     <section id="results" class="results" aria-live="polite"></section>
 
     <footer class="footer">
-      <small>© CarFact — улучшенная версия файлов. Замените в репозитории /assets и index.html</small>
+      <small data-i18n="footer">© CarFact — улучшенная версия файлов.</small>
     </footer>
   </main>
 
