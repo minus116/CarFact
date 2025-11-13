@@ -14,16 +14,9 @@
 }
 
 *, *::before, *::after {
-  transition: var(--theme-transition);
-}
-
-[data-theme="dark"] {
-  --primary: #f5f5f7;
-  --text: #f5f5f7;
-  --light-text: #aeaeb2;
-  --bg: #000000;
-  --card-bg: #1c1c1e;
-  --border: #3a3a3c;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 body {
@@ -37,8 +30,6 @@ body {
   margin: 0 auto;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  opacity: 1;
-  transition: var(--theme-transition), opacity 0.3s var(--transition-ease);
   scroll-behavior: smooth;
   scroll-padding-top: 100px;
 }
@@ -119,30 +110,33 @@ input {
   color: var(--text);
 }
 
-button.primary {
-  font-family: var(--font-sans);
-  background: var(--accent);
-  color: white;
-  border: none;
-  border-radius: 12px;
+.button-group {
+  display: flex;
+  gap: 10px;
+  margin-top: 0.5rem;
+}
+
+button {
   padding: 0.85rem 1.1rem;
+  border-radius: 12px;
+  border: none;
+  font-family: var(--font-sans);
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  width: 100%;
 }
 
-button.secondary {
-  font-family: var(--font-sans);
+.primary {
+  background: var(--accent);
+  color: white;
+  flex: 1;
+}
+
+.secondary {
   background: #f5f5f7;
   color: var(--text);
   border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 0.85rem 1.1rem;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  width: 100%;
+  flex: 1;
 }
 
 #result {
@@ -156,10 +150,8 @@ button.secondary {
   padding: 1.4rem;
   margin-bottom: 1.2rem;
   border: 1px solid var(--border);
-  transition: margin-bottom 0.6s cubic-bezier(0.2, 0, 0.2, 1);
 }
 
-/* Специальный стиль для блока "ближайшее техническое обслуживание" */
 .next-to-card {
   border-left: 4px solid var(--accent);
 }
@@ -193,15 +185,11 @@ button.secondary {
 
 .parts {
   margin-top: 0.5rem;
-  opacity: 0;
-  max-height: 0;
-  overflow: hidden;
-  transition: opacity 0.3s ease, max-height 0.3s ease;
+  display: none;
 }
 
 .parts.show {
-  opacity: 1;
-  max-height: 200px;
+  display: block;
 }
 
 .card h3, .card h4 {
@@ -235,7 +223,6 @@ button.secondary {
   margin-top: 0.2rem;
 }
 
-/* Стили для кругляшков */
 .toggle-circle {
   display: inline-block;
   width: 15px;
@@ -251,10 +238,41 @@ button.secondary {
   background-color: var(--text);
 }
 
-/* Стили для правильного выравнивания */
 .toggle-container {
   display: flex;
   justify-content: space-between;
   align-items: center;
   width: 100%;
+}
+
+ul {
+  list-style: none;
+  padding-left: 0;
+  margin: 0.25rem 0;
+}
+
+li {
+  padding: 0.2rem 0;
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+/* Светлая тема по умолчанию */
+[data-theme="light"] {
+  --primary: #1d1d1f;
+  --text: #1d1d1f;
+  --light-text: #86868b;
+  --bg: #ffffff;
+  --card-bg: #f5f5f7;
+  --border: #e5e5ea;
+}
+
+/* Темная тема */
+[data-theme="dark"] {
+  --primary: #f5f5f7;
+  --text: #f5f5f7;
+  --light-text: #aeaeb2;
+  --bg: #000000;
+  --card-bg: #1c1c1e;
+  --border: #3a3a3c;
 }
