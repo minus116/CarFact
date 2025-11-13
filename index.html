@@ -4,11 +4,25 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <meta name="theme-color" content="#ffffff">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/style.css">
   <title>CarFact</title>
 </head>
 <body>
+  <header>
+    <div class="logo">
+      <h1 id="pageTitle">CarFact.</h1>
+    </div>
+    <div class="controls">
+      <button id="langToggle" class="control-btn">RU</button>
+      <button id="themeToggle" class="control-btn">
+        <span class="theme-icon-container">
+          <img id="themeIcon" src="icons/sun.svg" alt="Theme" width="16" height="16">
+        </span>
+      </button>
+    </div>
+  </header>
+
   <main>
     <div class="input-group">
       <label for="vin" id="labelVin">VIN или номер кузова</label>
