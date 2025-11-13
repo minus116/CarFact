@@ -3,259 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#ffffff">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/style.css">
   <title>CarFact</title>
-  <style>
-    :root {
-      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      --font-title: 'Bebas Neue', sans-serif;
-      --primary: #1d1d1f;
-      --text: #1d1d1f;
-      --light-text: #86868b;
-      --bg: #ffffff;
-      --card-bg: #f5f5f7;
-      --accent: #0071e3;
-      --border: #e5e5ea;
-      --transition-ease: cubic-bezier(0.33, 0, 0.66, 1);
-      --theme-transition: background-color 0.3s var(--transition-ease),
-                          color 0.3s var(--transition-ease);
-    }
-
-    body {
-      font-family: var(--font-sans);
-      font-weight: 400;
-      background-color: var(--bg);
-      color: var(--text);
-      line-height: 1.45;
-      padding: 0 1rem;
-      max-width: 800px;
-      margin: 0 auto;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-      scroll-behavior: smooth;
-      scroll-padding-top: 100px;
-    }
-
-    header {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 1rem;
-      background-color: var(--bg);
-      z-index: 100;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 1rem;
-      border-bottom: 1px solid var(--border);
-      box-sizing: border-box;
-    }
-
-    main {
-      padding-top: 120px;
-    }
-
-    .logo h1 {
-      font-family: var(--font-title);
-      font-size: 2.4rem;
-      font-weight: 400;
-      letter-spacing: 0.02em;
-      margin: 0;
-      padding: 0;
-    }
-
-    .controls {
-      display: flex;
-      gap: 0.6rem;
-    }
-
-    .control-btn {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      border: none;
-      background: var(--card-bg);
-      color: var(--light-text);
-      font-family: var(--font-sans);
-      font-size: 14px;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-    }
-
-    .input-group {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      margin-bottom: 1.5rem;
-    }
-
-    label {
-      font-size: 0.9rem;
-      color: var(--light-text);
-      font-weight: 500;
-    }
-
-    input {
-      padding: 0.8rem 1rem;
-      font-family: var(--font-sans);
-      font-size: 1rem;
-      font-weight: 400;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      background: var(--card-bg);
-      color: var(--text);
-    }
-
-    .primary {
-      font-family: var(--font-sans);
-      background: var(--accent);
-      color: white;
-      border: none;
-      border-radius: 12px;
-      padding: 0.85rem 1.1rem;
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-      width: 100%;
-    }
-
-    .secondary {
-      font-family: var(--font-sans);
-      background: #f5f5f7;
-      color: var(--text);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 0.85rem 1.1rem;
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-      width: 100%;
-    }
-
-    #result {
-      margin-top: 1.5rem;
-      display: none;
-    }
-
-    .card {
-      background: var(--card-bg);
-      border-radius: 16px;
-      padding: 1.4rem;
-      margin-bottom: 1.2rem;
-      border: 1px solid var(--border);
-    }
-
-    .next-to-card {
-      border-left: 4px solid var(--accent);
-    }
-
-    .next-to-card h2 {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 0.5rem;
-      margin-bottom: 0.5rem;
-    }
-
-    .next-to-subtitle {
-      font-size: 0.85rem;
-      font-weight: 400;
-      color: var(--light-text);
-      opacity: 0.8;
-    }
-
-    .next-to-value {
-      font-size: 1.5rem;
-      font-weight: 600;
-      margin: 0 0 0.3rem;
-    }
-
-    .next-to-diff {
-      font-size: 1rem;
-      color: var(--light-text);
-      margin: 0;
-    }
-
-    .parts {
-      margin-top: 0.5rem;
-      display: none;
-    }
-
-    .parts.show {
-      display: block;
-    }
-
-    .card h3, .card h4 {
-      cursor: pointer;
-      position: relative;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .toggle-icon {
-      font-size: 1.2rem;
-      font-weight: 300;
-      width: 1.2em;
-      text-align: right;
-    }
-
-    .part-item {
-      font-size: 0.85rem;
-      color: var(--light-text);
-      margin-top: 0.3rem;
-      opacity: 0.8;
-    }
-
-    .regions-list {
-      margin-top: 0.8rem;
-      padding-left: 1rem;
-    }
-
-    .region-item {
-      margin-top: 0.2rem;
-    }
-
-    .toggle-circle {
-      display: inline-block;
-      width: 15px;
-      height: 15px;
-      border-radius: 50%;
-      background-color: var(--accent);
-      transition: background-color 0.2s ease;
-      flex-shrink: 0;
-      margin-left: 0.4rem;
-    }
-
-    .toggle-circle.open {
-      background-color: var(--text);
-    }
-
-    .toggle-container {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      width: 100%;
-    }
-  </style>
 </head>
 <body>
   <header>
     <div class="logo">
-      <h1>CarFact.</h1>
+      <h1 id="pageTitle">CarFact.</h1>
     </div>
     <div class="controls">
-      <button class="control-btn">RU</button>
-      <button class="control-btn">
+      <button id="langToggle" class="control-btn">RU</button>
+      <button id="themeToggle" class="control-btn">
         <span class="theme-icon-container">
-          <svg width="16" height="16" viewBox="0 0 16 16">
-            <circle cx="8" cy="8" r="7" fill="#FFCC00"/>
-          </svg>
+          <img id="themeIcon" src="icons/sun.svg" alt="Theme" width="16" height="16">
         </span>
       </button>
     </div>
@@ -263,127 +25,19 @@
 
   <main>
     <div class="input-group">
-      <label for="vin">VIN или номер кузова</label>
+      <label for="vin" id="labelVin">VIN или номер кузова</label>
       <input type="text" id="vin" placeholder="JTDKN3DU3M3123456 или Prius 2021" value="Prius 2021">
-      <label for="mileage">Пробег (км) — опционально</label>
+      <label for="mileage" id="labelMileage">Пробег (км) — опционально</label>
       <input type="number" id="mileage" placeholder="45000" min="0" max="500000" value="50000">
       <div class="button-group">
-        <button class="primary">Показать ТО</button>
-        <button class="secondary">Очистить</button>
+        <button id="submitBtn" class="primary">Показать ТО</button>
+        <button id="clearBtn" class="secondary">Очистить</button>
       </div>
     </div>
 
-    <div id="result">
-      <div class="card next-to-card">
-        <h2>Ближайшее техническое обслуживание <span class="service-distance">50 тыс. км</span></h2>
-        <p class="next-to-diff">сейчас</p>
-      </div>
-
-      <div class="card">
-        <div class="toggle-container" data-toggle="oil">
-          <h3>Моторное масло</h3>
-          <span class="toggle-circle"></span>
-        </div>
-        <p>каждые 10 тыс. км</p>
-        <div id="oil" class="parts show">
-          <div class="part-item">Toyota 04152-YZZA1, Mann W 719/77</div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="toggle-container" data-toggle="filters">
-          <h3>Фильтры</h3>
-          <span class="toggle-circle"></span>
-        </div>
-        <ul>
-          <li>Масляный — 10 тыс. км</li>
-          <li>Воздушный — 20 тыс. км</li>
-          <li>Салонный — 20 тыс. км</li>
-          <li>Топливный — 40 тыс. км</li>
-        </ul>
-        <div id="filters" class="parts show">
-          <div class="part-item"><strong>Масляный:</strong> Toyota 04152-YZZA1, Mann W 719/77</div>
-          <div class="part-item"><strong>Воздушный:</strong> Toyota 17801-YZZ050, Mann C 25 017</div>
-          <div class="part-item"><strong>Салонный:</strong> Toyota 87139-YZZ010, Mann CU 2755</div>
-          <div class="part-item"><strong>Топливный:</strong> Toyota 23390-0L010</div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="toggle-container" data-toggle="spark">
-          <h3>Свечи зажигания</h3>
-          <span class="toggle-circle"></span>
-        </div>
-        <p>Замена — 100 тыс. км</p>
-        <div id="spark" class="parts show">
-          <div class="part-item">NGK LFR6AIX-11, Denso SK20HR11</div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="toggle-container" data-toggle="brakes">
-          <h3>Тормозные колодки</h3>
-          <span class="toggle-circle"></span>
-        </div>
-        <ul>
-          <li>Передние — 40 тыс. км</li>
-          <li>Задние — 60 тыс. км</li>
-        </ul>
-        <div id="brakes" class="parts show">
-          <div class="part-item"><strong>Передние:</strong> Toyota 04465-0K060, TRW GDB3469</div>
-          <div class="part-item"><strong>Задние:</strong> Toyota 04466-0K060, TRW GDB3470</div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="toggle-container" data-toggle="wheels">
-          <h3>Колёса и давление</h3>
-          <span class="toggle-circle"></span>
-        </div>
-        <ul>
-          <li>Размер шин: <b>195/65 R15</b></li>
-          <li>Давление (бар): перед — <b>2.3</b>, зад — <b>2.2</b></li>
-        </ul>
-        <div id="wheels" class="parts show">
-          <h4>Марки резины</h4>
-          <div class="regions-list">
-            <div class="region-item"><strong>Япония:</strong> Bridgestone, Yokohama, Toyo</div>
-            <div class="region-item"><strong>Китай:</strong> Triangle, Sailun, Double Coin</div>
-            <div class="region-item"><strong>Корея:</strong> Kumho, Nexen, Hankook</div>
-            <div class="region-item"><strong>Европа:</strong> Michelin, Continental, Goodyear</div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <div id="result"></div>
   </main>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      // Добавляем обработчики для кругляшков
-      document.querySelectorAll('[data-toggle]').forEach(el => {
-        el.addEventListener('click', function() {
-          const targetId = this.getAttribute('data-toggle');
-          const target = document.getElementById(targetId);
-          const circle = this.querySelector('.toggle-circle');
-          
-          if (target && circle) {
-            target.classList.toggle('show');
-            circle.classList.toggle('open');
-          }
-        });
-      });
-      
-      // Обработчики кнопок
-      document.querySelector('.primary').addEventListener('click', function() {
-        document.getElementById('result').style.display = 'block';
-      });
-      
-      document.querySelector('.secondary').addEventListener('click', function() {
-        document.getElementById('vin').value = '';
-        document.getElementById('mileage').value = '';
-        document.getElementById('result').style.display = 'none';
-      });
-    });
-  </script>
+  <script src="assets/script.js"></script>
 </body>
 </html>
