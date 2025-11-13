@@ -236,6 +236,7 @@ const translations = {
 };
 
 let currentLang = 'ru';
+let currentTheme = 'light';
 let lastQuery = { carKey: null, mileage: 0 };
 
 function t(key) { return translations[currentLang][key] || key; }
@@ -243,6 +244,31 @@ function t(key) { return translations[currentLang][key] || key; }
 function human(km) {
   const k = Math.floor(km / 1000);
   return currentLang === 'ru' ? `${k} тыс. км` : `${k}k km`;
+}
+
+function setLanguage(lang) {
+  currentLang = lang;
+  document.documentElement.lang = lang;
+  document.getElementById('langToggle').textContent = lang === 'ru' ? 'RU' : 'EN';
+  updateUITexts();
+  if (lastQuery.carKey) {
+    renderReport(lastQuery.carKey, lastQuery.mileage);
+  }
+}
+
+function setTheme(theme) {
+  if (currentTheme === theme) return;
+  currentTheme = theme;
+  document.documentElement.setAttribute('data-theme', theme);
+  document.getElementById('themeIcon').src = theme === 'dark' ? 'icons/moon.svg' : 'icons/sun.svg';
+}
+
+function updateUITexts() {
+  document.getElementById('pageTitle').textContent = t('title');
+  document.getElementById('labelVin').textContent = t('labelVin');
+  document.getElementById('labelMileage').textContent = t('labelMileage');
+  document.getElementById('submitBtn').textContent = t('btnSubmit');
+  document.title = t('title');
 }
 
 function findCar(query) {
@@ -384,6 +410,17 @@ function attachScrollEffect() {
 }
 
 function init() {
+  setLanguage(currentLang);
+  setTheme(currentTheme);
+
+  document.getElementById('langToggle').addEventListener('click', () => {
+    setLanguage(currentLang === 'ru' ? 'en' : 'ru');
+  });
+
+  document.getElementById('themeToggle').addEventListener('click', () => {
+    setTheme(currentTheme === 'light' ? 'dark' : 'light');
+  });
+
   document.getElementById('submitBtn').addEventListener('click', () => {
     const vin = document.getElementById('vin').value.trim();
     const mileage = parseInt(document.getElementById('mileage').value) || 0;
