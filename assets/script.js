@@ -357,22 +357,22 @@ function renderReport(carKey, mileage) {
       </div>
     </div>
 
-    <div class="card wheels-card">
-      <div class="toggle-container" data-toggle="wheels">
+    <div class="card wheels-card" style="text-align: left; padding-left: 0;">
+      <div class="toggle-container" data-toggle="wheels" style="text-align: left;">
         <h3>${t('wheels')}</h3>
         <span class="toggle-circle"></span>
       </div>
-      <ul>
-        <li>${t('tireSize')}: <b>${car.tires.size}</b></li>
-        <li>${t('pressure')}: ${t('front')} — <b>${car.tires.pressure.front}</b>, ${t('rear')} — <b>${car.tires.pressure.rear}</b></li>
+      <ul style="text-align: left; padding-left: 0; margin-left: 0;">
+        <li style="text-align: left;">${t('tireSize')}: <b>${car.tires.size}</b></li>
+        <li style="text-align: left;">${t('pressure')}: ${t('front')} — <b>${car.tires.pressure.front}</b>, ${t('rear')} — <b>${car.tires.pressure.rear}</b></li>
       </ul>
-      <div id="wheels" class="parts">
-        <h4>${t('tireBrands')}</h4>
-        <div class="regions-list" style="text-align: left; padding-left: 1.2rem; margin-top: 0.6rem;">
-          <div class="region-item"><strong>${t('japan')}:</strong> ${tireRegions.japan.join(', ')}</div>
-          <div class="region-item"><strong>${t('china')}:</strong> ${tireRegions.china.join(', ')}</div>
-          <div class="region-item"><strong>${t('korea')}:</strong> ${tireRegions.korea.join(', ')}</div>
-          <div class="region-item"><strong>${t('europe')}:</strong> ${tireRegions.europe.join(', ')}</div>
+      <div id="wheels" class="parts" style="text-align: left; padding-left: 0; margin-left: 0;">
+        <h4 style="text-align: left;">${t('tireBrands')}</h4>
+        <div class="regions-list" style="text-align: left; padding-left: 0; margin-left: 0;">
+          <div class="region-item" style="text-align: left; padding-left: 0; margin-left: 0;"><strong>${t('japan')}:</strong> ${tireRegions.japan.join(', ')}</div>
+          <div class="region-item" style="text-align: left; padding-left: 0; margin-left: 0;"><strong>${t('china')}:</strong> ${tireRegions.china.join(', ')}</div>
+          <div class="region-item" style="text-align: left; padding-left: 0; margin-left: 0;"><strong>${t('korea')}:</strong> ${tireRegions.korea.join(', ')}</div>
+          <div class="region-item" style="text-align: left; padding-left: 0; margin-left: 0;"><strong>${t('europe')}:</strong> ${tireRegions.europe.join(', ')}</div>
         </div>
       </div>
     </div>
