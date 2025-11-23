@@ -374,10 +374,10 @@ function renderReport(carKey, mileage) {
       <div id="wheels" class="parts">
         <h4>${t('tireBrands')}</h4>
         <div class="regions-list">
-          <div class="region-item"><strong>${t('japan')}:</strong> ${tireRegions.japan.join(', ')}</div>
-          <div class="region-item"><strong>${t('china')}:</strong> ${tireRegions.china.join(', ')}</div>
-          <div class="region-item"><strong>${t('korea')}:</strong> ${tireRegions.korea.join(', ')}</div>
-          <div class="region-item"><strong>${t('europe')}:</strong> ${tireRegions.europe.join(', ')}</div>
+          <div class="part-item">${t('japan')}: ${tireRegions.japan.join(', ')}</div>
+          <div class="part-item">${t('china')}: ${tireRegions.china.join(', ')}</div>
+          <div class="part-item">${t('korea')}: ${tireRegions.korea.join(', ')}</div>
+          <div class="part-item">${t('europe')}: ${tireRegions.europe.join(', ')}</div>
         </div>
       </div>
     </div>
