@@ -1,0 +1,26 @@
+{
+  "version": "1.0.0",
+  "build_date": "2025-04-25",
+  "description": "База данных CarFact - Этап 1 (Базовая структура)",
+  "statistics": {
+    "manufacturers": 5,
+    "models": 5,
+    "generations": 5,
+    "modifications": 25,
+    "vin_prefixes": 42,
+    "body_codes": 35
+  },
+  "manufacturers": [
+    "toyota",
+    "honda", 
+    "nissan",
+    "mazda",
+    "subaru"
+  ],
+  "regions": {
+    "japan": "Япония",
+    "usa": "США",
+    "canada": "Канада",
+    "europe": "Европа"
+  }
+}
