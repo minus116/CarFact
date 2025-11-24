@@ -1,0 +1,147 @@
+{
+  "toyota_prius_2021": {
+    "id": "toyota_prius_2021",
+    "manufacturer": "toyota",
+    "model": "prius",
+    "generation": "XW50",
+    "year": 2021,
+    "name": {
+      "ru": "Toyota Prius (2021)",
+      "en": "Toyota Prius (2021)"
+    },
+    "identification": {
+      "vin_prefixes": ["JTDKN3E", "JTDKN3F"],
+      "body_codes": ["ZVW50", "ZVW51", "ZVW55"],
+      "paint_codes": ["1F7", "202", "209", "210", "3R3", "6M2", "6M9"]
+    },
+    "specifications": {
+      "engine": {
+        "code": "2ZR-FXE",
+        "type": "1.8L Hybrid",
+        "power_hp": 98,
+        "power_kw": 73,
+        "total_system_power_hp": 121,
+        "torque_nm": 142
+      },
+      "battery": {
+        "type": "Ni-MH",
+        "capacity_kwh": 0.75,
+        "voltage_v": 201.6
+      },
+      "dimensions": {
+        "length_mm": 4540,
+        "width_mm": 1760,
+        "height_mm": 1470,
+        "wheelbase_mm": 2700,
+        "ground_clearance_mm": 130,
+        "curb_weight_kg": 1390
+      }
+    },
+    "maintenance": {
+      "intervals": {
+        "oil_change": 10000,
+        "filters": {
+          "oil": 10000,
+          "air": 20000,
+          "cabin": 20000,
+          "fuel": 40000
+        },
+        "spark_plugs": 100000,
+        "brake_pads": {
+          "front": 40000,
+          "rear": 60000
+        },
+        "timing_chain": "lifetime"
+      },
+      "fluids": {
+        "engine_oil": {
+          "specification": "Toyota Genuine 0W-20",
+          "capacity_liters": 3.7
+        },
+        "transmission_fluid": {
+          "specification": "Toyota WS",
+          "capacity_liters": 3.9
+        },
+        "coolant": {
+          "specification": "Toyota SLLC",
+          "capacity_liters": 5.2
+        }
+      }
+    },
+    "parts": {
+      "oil_filter": ["Toyota 04152-YZZA1", "Mann W 719/77", "Bosch 3323"],
+      "air_filter": ["Toyota 17801-YZZ050", "Mann C 25 017", "Bosch 1 987 432 178"],
+      "cabin_filter": ["Toyota 87139-YZZ010", "Mann CU 2755", "Bosch 1 987 432 510"],
+      "fuel_filter": ["Toyota 23390-0L010", "Mann WK 712/2"],
+      "spark_plugs": ["NGK LFR6AIX-11", "Denso SK20HR11"],
+      "brake_pads_front": ["Toyota 04465-0K060", "TRW GDB3469", "Textar 2400301"],
+      "brake_pads_rear": ["Toyota 04466-0K060", "TRW GDB3470", "Textar 2400401"],
+      "tires": {
+        "sizes": ["195/65 R15", "215/55 R17"],
+        "regions": {
+          "japan": ["Bridgestone", "Yokohama", "Toyo"],
+          "china": ["Triangle", "Sailun", "Double Coin"],
+          "korea": ["Kumho", "Nexen", "Hankook"],
+          "europe": ["Michelin", "Continental", "Goodyear"]
+        }
+      }
+    }
+  },
+  "honda_fit_2020": {
+    "id": "honda_fit_2020",
+    "manufacturer": "honda",
+    "model": "fit",
+    "generation": "GR5",
+    "year": 2020,
+    "name": {
+      "ru": "Honda Fit (2020)",
+      "en": "Honda Fit (2020)"
+    },
+    "identification": {
+      "vin_prefixes": ["JHMGR5H", "JHMGR5J", "2HGGR5H"],
+      "body_codes": ["GR5", "GS5"],
+      "paint_codes": ["NH-731P", "B-92P", "R-510P", "YR-523P"]
+    },
+    "specifications": {
+      "engine": {
+        "code": "L15B",
+        "type": "1.5L i-VTEC",
+        "power_hp": 120,
+        "power_kw": 89,
+        "torque_nm": 145
+      },
+      "dimensions": {
+        "length_mm": 3995,
+        "width_mm": 1695,
+        "height_mm": 1525,
+        "wheelbase_mm": 2530,
+        "ground_clearance_mm": 120,
+        "curb_weight_kg": 1080
+      }
+    },
+    "maintenance": {
+      "intervals": {
+        "oil_change": 10000,
+        "filters": {
+          "oil": 10000,
+          "air": 20000,
+          "cabin": 20000
+        },
+        "spark_plugs": 100000,
+        "brake_pads": {
+          "front": 35000,
+          "rear": 50000
+        },
+        "timing_belt": 120000
+      }
+    },
+    "parts": {
+      "oil_filter": ["Honda 15400-PLM-A02", "Mann W 701/61", "Bosch 3323"],
+      "air_filter": ["Honda 17220-PLM-A01", "Mann C 25 016", "Bosch 1 987 432 178"],
+      "cabin_filter": ["Honda 17641-PLM-A01", "Mann CU 2750", "Bosch 1 987 432 510"],
+      "spark_plugs": ["NGK SILZKR7B11", "Denso SIKR8B11"],
+      "brake_pads_front": ["Honda 45022-TG5-A01", "TRW GDB2278", "Textar 2400301"],
+      "brake_pads_rear": ["Honda 43022-TG5-A01", "TRW GDB2279", "Textar 2400401"]
+    }
+  }
+}
