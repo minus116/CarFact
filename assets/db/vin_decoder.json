@@ -1,0 +1,113 @@
+{
+  "wmi": {
+    "JTD": {
+      "manufacturer": "toyota",
+      "country": "japan",
+      "models": ["prius", "corolla", "camry"],
+      "description": "Toyota Motor Corporation, Japan"
+    },
+    "JHM": {
+      "manufacturer": "honda",
+      "country": "japan", 
+      "models": ["civic", "accord", "crv"],
+      "description": "Honda Motor Co., Ltd., Japan"
+    },
+    "JN1": {
+      "manufacturer": "nissan",
+      "country": "japan",
+      "models": ["xtrail", "qashqai", "leaf"],
+      "description": "Nissan Motor Co., Ltd., Japan"
+    },
+    "JM1": {
+      "manufacturer": "mazda",
+      "country": "japan",
+      "models": ["cx5", "mazda3", "cx30"],
+      "description": "Mazda Motor Corporation, Japan"
+    },
+    "JF1": {
+      "manufacturer": "subaru",
+      "country": "japan",
+      "models": ["xv", "forester", "outback"],
+      "description": "Subaru Corporation, Japan"
+    },
+    "1NX": {
+      "manufacturer": "toyota",
+      "country": "usa",
+      "models": ["corolla", "camry"],
+      "description": "Toyota Motor Manufacturing, USA"
+    },
+    "2HG": {
+      "manufacturer": "honda",
+      "country": "canada",
+      "models": ["civic", "crv"],
+      "description": "Honda of Canada Mfg., Inc."
+    },
+    "3N1": {
+      "manufacturer": "nissan",
+      "country": "mexico",
+      "models": ["sentra", "versa"],
+      "description": "Nissan Mexicana, S.A. de C.V."
+    },
+    "WVW": {
+      "manufacturer": "volkswagen",
+      "country": "germany",
+      "models": ["golf", "passat"],
+      "description": "Volkswagen AG, Germany"
+    },
+    "WBA": {
+      "manufacturer": "bmw",
+      "country": "germany",
+      "models": ["3_series", "5_series"],
+      "description": "BMW AG, Germany"
+    }
+  },
+  "model_years": {
+    "A": 2010, "B": 2011, "C": 2012, "D": 2013, "E": 2014, "F": 2015, "G": 2016, "H": 2017,
+    "J": 2018, "K": 2019, "L": 2020, "M": 2021, "N": 2022, "P": 2023, "R": 2024, "S": 2025,
+    "1": 2001, "2": 2002, "3": 2003, "4": 2004, "5": 2005, "6": 2006, "7": 2007, "8": 2008, "9": 2009,
+    "0": 2000
+  },
+  "plants": {
+    "toyota": {
+      "1": "Tsutsumi Plant, Japan",
+      "2": "Takaoka Plant, Japan",
+      "3": "Motomachi Plant, Japan",
+      "4": "Georgetown, Kentucky, USA",
+      "5": "Princeton, Indiana, USA",
+      "6": "Burnaston, UK",
+      "7": "Tianjin, China"
+    },
+    "honda": {
+      "1": "Marysville, Ohio, USA",
+      "2": "East Liberty, Ohio, USA",
+      "3": "Alliston, Ontario, Canada",
+      "4": "Sayama, Japan",
+      "5": "Yorii, Japan"
+    },
+    "nissan": {
+      "1": "Tochigi, Japan",
+      "2": "Kyushu, Japan",
+      "3": "Canton, Mississippi, USA",
+      "4": "Smyrna, Tennessee, USA",
+      "5": "Aguascalientes, Mexico"
+    }
+  },
+  "vds_patterns": {
+    "toyota_prius": [
+      {"prefix": "JTDKN3D", "generation": "XW50", "engine": "1.8L Hybrid", "years": "2015-2018"},
+      {"prefix": "JTDKN3E", "generation": "XW50", "engine": "1.8L Hybrid", "years": "2018-2022"},
+      {"prefix": "JTDKN3F", "generation": "XW50", "engine": "1.8L Hybrid AWD", "years": "2018-2022"},
+      {"prefix": "JTDKN3G", "generation": "XW60", "engine": "2.0L Hybrid", "years": "2022-present"}
+    ],
+    "toyota_corolla": [
+      {"prefix": "JTDBR3FU", "generation": "E210", "engine": "1.8L", "years": "2018-2021"},
+      {"prefix": "JTDBT3FU", "generation": "E210", "engine": "2.0L", "years": "2021-present"},
+      {"prefix": "JTDBU3FU", "generation": "E210", "engine": "1.8L Hybrid", "years": "2018-present"}
+    ],
+    "honda_civic": [
+      {"prefix": "2HGFC2F", "generation": "FK7", "engine": "1.5L Turbo", "years": "2016-2021"},
+      {"prefix": "2HGFC3F", "generation": "FL5", "engine": "2.0L NA", "years": "2022-present"},
+      {"prefix": "2HGFC4F", "generation": "FL5", "engine": "1.5L Turbo", "years": "2022-present"}
+    ]
+  }
+}
